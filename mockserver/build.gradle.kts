@@ -13,7 +13,7 @@ plugins {
 group = "demo"
 version = "0.0.1"
 application {
-    mainClass.set("mockserver.demo.ApplicationKt")
+    mainClass.set("mockserver.ApplicationKt")
 }
 
 repositories {
@@ -23,7 +23,7 @@ repositories {
 tasks{
     shadowJar {
         manifest {
-            attributes(Pair("Main-Class", "mockserver.demo.ApplicationKt"))
+            attributes(Pair("Main-Class", "mockserver.ApplicationKt"))
         }
     }
 }

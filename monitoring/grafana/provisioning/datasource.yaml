@@ -1,0 +1,12 @@
+
+apiVersion: 1
+
+# http://docs.grafana.org/administration/provisioning/#datasources
+
+datasources:
+  - name: Prometheus Local
+    type: prometheus
+    access: direct
+    url: 'http://localhost:9090'
+    editable: false
+    isDefault: false

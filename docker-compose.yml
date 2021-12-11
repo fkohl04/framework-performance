@@ -1,0 +1,26 @@
+version: '2'
+services:
+  prometheus:
+    image: prom/prometheus:v2.29.1
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+  grafana:
+    image: grafana/grafana:7.5.10
+    volumes:
+      - ./monitoring/grafana/provisioning/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - ./monitoring/grafana/provisioning/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    ports:
+      - "3000:3000"
+  mockserver:
+    build: mockserver
+    ports:
+      - "8080:8080"
+  ktor:
+    build: ktor
+    ports:
+      - "8081:8081"
+    environment:
+      THIRD_PARTY_URL: "http://host.docker.internal"
