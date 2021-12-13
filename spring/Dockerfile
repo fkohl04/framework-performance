@@ -3,4 +3,4 @@ EXPOSE 8082
 
 ADD build/libs/spring.jar /opt/spring.jar
 
-CMD ["java", "-jar", "/opt/spring.jar", "-Xmx2G"]
+CMD ["java", "-jar", "/opt/spring.jar", "-Xmx1G"]

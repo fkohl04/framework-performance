@@ -3,4 +3,4 @@ EXPOSE 8081
 
 ADD build/libs/ktor-0.0.1-all.jar /opt/ktor.jar
 
-CMD ["java", "-jar", "/opt/ktor.jar", "-Xmx2G"]
+CMD ["java", "-jar", "/opt/ktor.jar", "-Xmx1G"]

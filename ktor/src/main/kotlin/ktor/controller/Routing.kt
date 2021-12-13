@@ -13,7 +13,7 @@ fun Application.configureRouting() {
     val serverUrl = getPropertyOrEmptyString("server.url")
     val serverPort = getPropertyOrEmptyString("server.port")
 
-    val thirdPartyClient = ThirPartyClient(serverUrl, serverPort)
+    val thirdPartyClient = ThirdPartyClient(serverUrl, serverPort)
 
     routing {
         route("/") {

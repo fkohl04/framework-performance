@@ -6,7 +6,7 @@ import ktor.shared.plugins.configureCallLogging
 import ktor.shared.plugins.configureMicrometer
 import ktor.shared.plugins.configureSerialization
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
 
 fun Application.module() {
     configureSerialization()
