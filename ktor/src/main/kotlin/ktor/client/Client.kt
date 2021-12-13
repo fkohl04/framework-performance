@@ -8,7 +8,7 @@ import ktor.shared.extension.getPropertyOrEmptyString
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class ThirPartyClient(val serverUrl: String, val serverPort: String) {
+class ThirPartyClient(private val serverUrl: String, private val serverPort: String) {
 
     private val client = HttpClient()
 

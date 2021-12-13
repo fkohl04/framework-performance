@@ -15,9 +15,9 @@ class BasicSimulation extends Simulation {
   val httpProtocol: HttpProtocolBuilder = http
     .baseUrl(url)
 
-  val scn: ScenarioBuilder = scenario("Log in and fetch cards")
+  val scn: ScenarioBuilder = scenario(s"Testing $url")
     .exec {
-      http("Call service under test").get("/").check(status.is(200))
+      http(s"GET $url").get("/").check(status.is(200))
     }
 
   setUp(scn.inject(constantUsersPerSec(userCount) during (duration seconds))

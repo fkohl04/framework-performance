@@ -24,3 +24,15 @@ services:
       - "8081:8081"
     environment:
       THIRD_PARTY_URL: "http://host.docker.internal"
+  spring:
+    build: spring
+    ports:
+      - "8082:8082"
+    environment:
+      THIRD_PARTY_URL: "http://host.docker.internal"
+  spring-webflux:
+    build: spring-webflux
+    ports:
+      - "8083:8083"
+    environment:
+      THIRD_PARTY_URL: "http://host.docker.internal"
