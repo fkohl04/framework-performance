@@ -8,4 +8,4 @@
  */
 
 rootProject.name = "framework-performance"
-include("mockserver","ktor", "ktor-netty" , "shared", "performancetest", "spring", "spring-webflux" )
+include("mockserver", "ktor", "ktor-netty", "performancetest", "spring", "spring-webflux")

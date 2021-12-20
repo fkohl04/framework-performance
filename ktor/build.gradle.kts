@@ -40,9 +40,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("org.kodein.di:kodein-di-generic-jvm:$kodein_version")
     implementation("org.postgresql:postgresql:42.2.23")
-    implementation(project(":shared"))
     //Client dependencies
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-apache:$ktor_version")
-    testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 }

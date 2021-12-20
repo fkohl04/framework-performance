@@ -40,5 +40,4 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("org.kodein.di:kodein-di-generic-jvm:$kodein_version")
     implementation("org.postgresql:postgresql:42.2.23")
-    implementation(project(":shared"))
 }

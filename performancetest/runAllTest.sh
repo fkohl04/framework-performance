@@ -1,6 +1,6 @@
 export DURATION=180
 
-userCounts=(100 200 500)
+userCounts=(100 200 300 400 500 600)
 ports=(8081 8082 8083 8084)
 
 for port in "${ports[@]}"; do

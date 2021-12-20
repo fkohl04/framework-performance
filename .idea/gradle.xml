@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/ktor-netty" />
             <option value="$PROJECT_DIR$/mockserver" />
             <option value="$PROJECT_DIR$/performancetest" />
-            <option value="$PROJECT_DIR$/shared" />
             <option value="$PROJECT_DIR$/spring" />
             <option value="$PROJECT_DIR$/spring-webflux" />
           </set>
