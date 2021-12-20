@@ -1,5 +1,3 @@
-# prometheus.yml
-# https://prometheus.io/docs/prometheus/latest/configuration/configuration/
 global:
   scrape_interval:     5s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
   scrape_timeout:      5s # Default value
@@ -11,47 +9,30 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'performance-client-local'
+  - job_name: 'ktor'
     metrics_path: '/metrics'
     static_configs:
-      - targets: [ 'localhost:8082' ]
+      - targets: [ 'host.docker.internal:8081' ]
         labels:
           framework: ktor
 
-  - job_name: 'performance-spring-local'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: [ 'localhost:8084' ]
-        labels:
-          framework: spring
-
-  - job_name: 'dsl-library-docker'
+  - job_name: 'ktor-netty'
     metrics_path: '/metrics'
-    tls_config:
-      insecure_skip_verify: true
-    static_configs:
-      - targets: ['host.docker.internal:8081']
-        labels:
-          framework: ktor
-
-  - job_name: 'performance-client-docker'
-    metrics_path: '/metrics'
-    tls_config:
-      insecure_skip_verify: true
     static_configs:
       - targets: [ 'host.docker.internal:8082' ]
         labels:
-          framework: ktor
+          framework: ktor-netty
 
-  - job_name: 'performance-spring-docker'
+  - job_name: 'spring-reactive'
     metrics_path: '/actuator/prometheus'
-    tls_config:
-      insecure_skip_verify: true
+    static_configs:
+      - targets: [ 'host.docker.internal:8083' ]
+        labels:
+          framework: spring-netty
+
+  - job_name: 'spring'
+    metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: [ 'host.docker.internal:8084' ]
         labels:
           framework: spring
-
-  - job_name: 'docker'
-    static_configs:
-        - targets: ['host.docker.internal:9323']  # Docker monitoring

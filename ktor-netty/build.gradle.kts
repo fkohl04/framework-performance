@@ -36,7 +36,7 @@ dependencies {
     implementation("io.ktor:ktor-metrics-micrometer:$ktor_version")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheus_version")
     implementation("io.ktor:ktor-jackson:$ktor_version")
-    implementation("io.ktor:ktor-server-cio:$ktor_version")
+    implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("org.kodein.di:kodein-di-generic-jvm:$kodein_version")
     implementation("org.postgresql:postgresql:42.2.23")
@@ -44,5 +44,4 @@ dependencies {
     //Client dependencies
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-apache:$ktor_version")
-    testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 }

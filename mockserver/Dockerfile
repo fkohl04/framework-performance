@@ -3,4 +3,4 @@ EXPOSE 8080
 
 ADD build/libs/mockserver-0.0.1-all.jar /opt/mockserver.jar
 
-CMD ["java", "-jar", "/opt/mockserver.jar", "-Xmx2G"]
+CMD ["java", "-jar", "/opt/mockserver.jar", "-Xmx4G"]

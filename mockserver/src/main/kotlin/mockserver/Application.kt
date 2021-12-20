@@ -6,7 +6,7 @@ import mockserver.shared.plugins.configureCallLogging
 import mockserver.shared.plugins.configureMicrometer
 import mockserver.shared.plugins.configureSerialization
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
 
 fun Application.module() {
     configureSerialization()

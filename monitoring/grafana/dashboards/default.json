@@ -3,883 +3,63 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "${DS_PROMETHEUS}",
+        "datasource": "-- Grafana --",
         "enable": true,
-        "expr": "time() == BOOL timestamp(rate(kube_pod_container_status_restarts_total{job=\"kube-state-metrics\", namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[2m]) > 0)",
-        "hide": false,
-        "iconColor": "rgba(215, 44, 44, 1)",
-        "name": "Restarts",
-        "showIn": 0,
-        "tags": [
-          "restart"
-        ],
-        "type": "rows"
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
       }
     ]
   },
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 30,
-  "iteration": 1622039467710,
+  "id": 1,
+  "iteration": 1640039449226,
   "links": [],
   "panels": [
     {
-      "collapsed": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
-        "h": 1,
+        "h": 7,
         "w": 24,
         "x": 0,
         "y": 0
       },
-      "id": 16,
-      "panels": [],
-      "title": "Usage",
-      "type": "row"
-    },
-    {
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 1
-      },
-      "id": 31,
-      "interval": "",
-      "links": [],
-      "options": {
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true,
-        "text": {}
-      },
-      "pluginVersion": "7.5.9",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum by (uri) (rate(http_server_requests_seconds_count{uri!~\".*actuator.*\",  namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[1m]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{uri}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Current Request Rate (1m)",
-      "type": "bargauge"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 9
-      },
       "hiddenSeries": false,
-      "id": 21,
+      "id": 6,
       "legend": {
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
-        "max": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
         "min": false,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.9",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum by (status) (rate(http_server_requests_seconds_count{uri=\"/transactions-push-mastercard\", namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Mastercard Push (status: {{status}})",
-          "refId": "A"
-        },
-        {
-          "expr": "sum by (status) (rate(http_server_requests_seconds_count{uri=\"/transactions-push-visa\",  namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "VISA Push (status: {{status}})",
-          "refId": "B"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Transaction Push Rate (15min)",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "reqps",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 5,
-        "x": 0,
-        "y": 17
-      },
-      "id": 18,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "expr": "sum(app_number_of_visa_transactions_endpoint_total{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
-      "thresholds": "",
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Received Push Transactions VISA",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 19,
-        "x": 5,
-        "y": 17
-      },
-      "hiddenSeries": false,
-      "id": 47,
-      "legend": {
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": true,
-        "show": true,
-        "total": true,
         "values": true
       },
       "lines": true,
       "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.9",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum by (result) (irate(app_enroll_mastercard_total{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[60m]))",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Mastercard ({{result}})",
-          "refId": "A"
-        },
-        {
-          "expr": "sum by (result) (irate(app_enroll_visa_total{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[60m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "VISA ({{result}})",
-          "refId": "B"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Enrollments (60m)",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "reqps",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
-      "datasource": "${DS_PROMETHEUS}",
-      "decimals": null,
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 5,
-        "x": 0,
-        "y": 21
-      },
-      "id": 19,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "expr": "sum(app_number_of_mastercard_transactions_endpoint_total{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{container}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": "",
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Received Push Transactions Mastercard ",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
-    },
-    {
-      "collapsed": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 25
-      },
-      "id": 14,
-      "panels": [],
-      "title": "Dependencies",
-      "type": "row"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 26
-      },
-      "hiddenSeries": false,
-      "id": 6,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [ ],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.9",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [ ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(rate(app_retrieve_permissions_from_caa_seconds_sum{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))\n/ sum(rate(app_retrieve_permissions_from_caa_seconds_count{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "CAA API - Read",
-          "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(rate(app_read_mfa_card_credentials_seconds_sum{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))\n/ sum(rate(app_read_mfa_card_credentials_seconds_count{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "MFA API - Read",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(rate(app_write_mfa_card_credentials_seconds_sum{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))\n/ sum(rate(app_write_mfa_card_credentials_seconds_count{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "MFA API - Create",
-          "refId": "C"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Internal Dependencies (15m)",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "s",
-          "label": "average response time",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 26
-      },
-      "hiddenSeries": false,
-      "id": 4,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [ ],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.9",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [ ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(rate(app_read_fdd_region_restrictions_seconds_sum{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))/sum(rate(app_read_fdd_region_restrictions_seconds_count{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Read Region Restrictions",
-          "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(rate(app_update_fdd_region_restrictions_seconds_sum{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))/sum(rate(app_update_fdd_region_restrictions_seconds_count{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Update Region Restrictions",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(rate(app_read_fdd_sales_amount_seconds_sum{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))/sum(rate(app_read_fdd_sales_amount_seconds_count{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Read Sales Amount",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(rate(app_read_fdd_login_service_seconds_sum{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))/sum(rate(app_read_fdd_login_service_seconds_count{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Read Login Service",
-          "refId": "D"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(rate(app_update_fdd_sales_amount_seconds_sum{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))/sum(rate(app_update_fdd_sales_amount_seconds_count{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Update Sales Amount",
-          "refId": "E"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "FDD (15m)",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "s",
-          "label": "average response time",
-          "logBase": 1,
-          "max": null,
-          "min": 0,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 34
-      },
-      "hiddenSeries": false,
-      "id": 58,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [ ],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.9",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [ ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(rate(app_read_visa_dps_card_information_seconds_sum{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))\n/sum(rate(app_read_visa_dps_card_information_seconds_count{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Read DPS Card Information",
-          "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(rate(app_read_visa_dps_cvv2_seconds_sum{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))\n/sum(rate(app_read_visa_dps_cvv2_seconds_count{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Read CVV2",
-          "refId": "B"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Visa DPS Response Times (15m)",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "s",
-          "label": "average response time",
-          "logBase": 1,
-          "max": null,
-          "min": 0,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 34
-      },
-      "hiddenSeries": false,
-      "id": 59,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
       "nullPointMode": "null",
       "options": {
         "alertThreshold": false
       },
       "percentage": false,
-      "pluginVersion": "7.5.9",
+      "pluginVersion": "7.5.10",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -890,28 +70,18 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(rate(app_read_visa_dps_card_information_seconds_count{uri!~\".*actuator.*\",  namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
+          "expr": "sum (rate(ktor_http_server_requests_seconds_count{framework=~\"$frmwrk\"}[1m]) ) by (framework)",
           "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Read Visa DPS Card Information",
+          "legendFormat": "{{framework}}",
+          "queryType": "randomWalk",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(rate(app_read_visa_dps_cvv2_seconds_count{uri!~\".*actuator.*\",  namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Read CVV2",
-          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Visa DPS Request Rate (15m)",
+      "title": "Request Rate [1m]",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -926,553 +96,9 @@
         "values": []
       },
       "yaxes": [
-        {
-          "format": "reqps",
-          "label": "request rate",
-          "logBase": 1,
-          "max": null,
-          "min": 0,
-          "show": true
-        },
         {
           "format": "short",
           "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 0,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "rgb(255, 255, 255)",
-                "value": null
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 42
-      },
-      "id": 32,
-      "interval": "",
-      "links": [],
-      "options": {
-        "displayMode": "gradient",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true,
-        "text": {}
-      },
-      "pluginVersion": "7.5.9",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(increase(app_read_visa_dps_card_information_seconds_bucket{namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\",le=\"0.5\"}[$__range]))",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "< 0.5 sec",
-          "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(increase(app_read_visa_dps_card_information_seconds_bucket{namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\",le=\"1.0\"}[$__range]))\n-sum(increase(app_read_visa_dps_card_information_seconds_bucket{namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\",le=\"0.5\"}[$__range]))",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "< 1 sec",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(increase(app_read_visa_dps_card_information_seconds_bucket{namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\",le=\"2.0\"}[$__range]))\n-sum(increase(app_read_visa_dps_card_information_seconds_bucket{namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\",le=\"1.0\"}[$__range]))",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "< 2 sec",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(increase(app_read_visa_dps_card_information_seconds_bucket{namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\",le=\"3.0\"}[$__range]))\n-sum(increase(app_read_visa_dps_card_information_seconds_bucket{namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\",le=\"2.0\"}[$__range]))",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "< 3 sec",
-          "refId": "E"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(increase(app_read_visa_dps_card_information_seconds_bucket{namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\",le=\"+Inf\"}[$__range]))\n-sum(increase(app_read_visa_dps_card_information_seconds_bucket{namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\",le=\"3.0\"}[$__range]))",
-          "hide": false,
-          "interval": "",
-          "legendFormat": ">= 3 sec",
-          "refId": "D"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Visa DPS Response Time Histogram",
-      "type": "bargauge"
-    },
-    {
-      "collapsed": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 50
-      },
-      "id": 35,
-      "panels": [],
-      "title": "HTTP",
-      "type": "row"
-    },
-    {
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 100,
-            "gradientMode": "none",
-            "hideFrom": {
-              "graph": false,
-              "legend": false,
-              "tooltip": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 51
-      },
-      "id": 60,
-      "interval": "",
-      "links": [],
-      "options": {
-        "graph": {},
-        "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max",
-            "min",
-            "sum"
-          ],
-          "displayMode": "table",
-          "placement": "bottom"
-        },
-        "tooltipOptions": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "7.5.7",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum by (uri, status) (irate(http_server_requests_seconds_count{uri!~\".*actuator.*\",  namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[15m]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{uri}} ({{status}})",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Request Count (15m)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 100,
-            "gradientMode": "none",
-            "hideFrom": {
-              "graph": false,
-              "legend": false,
-              "tooltip": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 24,
-        "x": 0,
-        "y": 59
-      },
-      "id": 33,
-      "links": [],
-      "options": {
-        "graph": {},
-        "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max",
-            "min",
-            "sum"
-          ],
-          "displayMode": "table",
-          "placement": "bottom"
-        },
-        "tooltipOptions": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "7.5.7",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "avg by (uri, status) (rate(http_server_requests_seconds_sum{service=~\"$service\"}[5m]) / rate(http_server_requests_seconds_count{service=~\"$service\"}[5m]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{uri}} ({{status}})",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Response Time (5m)",
-      "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 70
-      },
-      "id": 29,
-      "panels": [],
-      "title": "HikariCP",
-      "type": "row"
-    },
-    {
-      "cacheTimeout": null,
-      "columns": [
-        {
-          "text": "Current",
-          "value": "current"
-        }
-      ],
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fontSize": "100%",
-      "gridPos": {
-        "h": 6,
-        "w": 5,
-        "x": 0,
-        "y": 71
-      },
-      "id": 23,
-      "links": [],
-      "pageSize": null,
-      "scroll": true,
-      "showHeader": true,
-      "sort": {
-        "col": 0,
-        "desc": true
-      },
-      "styles": [
-        {
-          "alias": "Time",
-          "align": "auto",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "pattern": "Time",
-          "type": "date"
-        },
-        {
-          "alias": "",
-          "align": "auto",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "decimals": 2,
-          "pattern": "/.*/",
-          "thresholds": [],
-          "type": "number",
-          "unit": "short"
-        }
-      ],
-      "targets": [
-        {
-          "expr": "hikaricp_connections{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{service}}: {{pod}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Connection Size",
-      "transform": "timeseries_aggregations",
-      "type": "table-old"
-    },
-    {
-      "cacheTimeout": null,
-      "columns": [
-        {
-          "text": "Current",
-          "value": "current"
-        }
-      ],
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fontSize": "100%",
-      "gridPos": {
-        "h": 6,
-        "w": 5,
-        "x": 5,
-        "y": 71
-      },
-      "id": 25,
-      "links": [],
-      "pageSize": null,
-      "scroll": true,
-      "showHeader": true,
-      "sort": {
-        "col": 0,
-        "desc": true
-      },
-      "styles": [
-        {
-          "alias": "Time",
-          "align": "auto",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "pattern": "Time",
-          "type": "date"
-        },
-        {
-          "alias": "",
-          "align": "auto",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "decimals": 2,
-          "pattern": "/.*/",
-          "thresholds": [],
-          "type": "number",
-          "unit": "short"
-        }
-      ],
-      "targets": [
-        {
-          "expr": "hikaricp_connections_timeout_total{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{service}}: {{pod}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Connection Timout",
-      "transform": "timeseries_aggregations",
-      "type": "table-old"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 6,
-        "w": 14,
-        "x": 10,
-        "y": 71
-      },
-      "hiddenSeries": false,
-      "id": 27,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.9",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(hikaricp_connections_active{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": " hikaricp_connections_active {{service}}",
-          "refId": "A"
-        },
-        {
-          "expr": "sum(hikaricp_connections_idle{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": " hikaricp_connections_idle {{service}}",
-          "refId": "B"
-        },
-        {
-          "expr": "sum(hikaricp_connections_pending{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": " hikaricp_connections_pending {{service}}",
-          "refId": "C"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Connections",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": "connection count",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -1493,25 +119,11 @@
       }
     },
     {
-      "collapsed": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 77
-      },
-      "id": 55,
-      "panels": [],
-      "title": "Misc",
-      "type": "row"
-    },
-    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -1520,12 +132,109 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 16,
+        "w": 24,
         "x": 0,
-        "y": 78
+        "y": 7
       },
       "hiddenSeries": false,
-      "id": 51,
+      "id": 4,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.10",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "rate(ktor_http_server_requests_seconds_sum{ framework=~\"$frmwrk\" }[1m]) / rate(ktor_http_server_requests_seconds_count{ framework=~\"$frmwrk\" }[1m])",
+          "interval": "",
+          "legendFormat": "{{framework}} {{ status }} ",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average Response Time [1m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "s",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 15
+      },
+      "hiddenSeries": false,
+      "id": 8,
       "legend": {
         "avg": false,
         "current": false,
@@ -1537,13 +246,12 @@
       },
       "lines": true,
       "linewidth": 1,
-      "links": [],
       "nullPointMode": "null",
       "options": {
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.5.9",
+      "pluginVersion": "7.5.10",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1553,46 +261,124 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg(jvm_threads_live)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "live",
-          "refId": "D"
-        },
-        {
-          "expr": "avg(jvm_threads_daemon or jvm_threads_daemon_threads{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "deamon",
+          "exemplar": false,
+          "expr": "sum(jvm_memory_used_bytes{framework=~\"$frmwrk\"}) by (area, framework)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{framework}}-{{area}}",
+          "queryType": "randomWalk",
           "refId": "A"
         },
         {
-          "expr": "avg(jvm_threads_peak or jvm_threads_peak_threads{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "peak",
+          "exemplar": false,
+          "expr": "sum(jvm_memory_used_bytes{framework=~\"$frmwrk\"}) ",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{framework}}",
           "refId": "B"
         },
         {
-          "expr": "avg(process_threads{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "process",
+          "exemplar": false,
+          "expr": "sum(jvm_buffer_memory_used_bytes{framework=~\"$frmwrk\"}) by (id, framework)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{framework}}-{{id}}",
           "refId": "C"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Memory Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
         },
         {
-          "expr": "sum by (name) (executor_pool_size_threads{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{name}} Pool Size",
-          "refId": "E"
-        },
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 15
+      },
+      "hiddenSeries": false,
+      "id": 2,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.10",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
         {
-          "expr": "sum by (name) (executor_queued_tasks{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{name}} Queued",
-          "refId": "F"
+          "exemplar": true,
+          "expr": "jvm_threads_states_threads{framework=~\"$frmwrk\"}",
+          "interval": "",
+          "legendFormat": "{{ framework }}-{{ state }}",
+          "queryType": "randomWalk",
+          "refId": "A"
         }
       ],
       "thresholds": [],
@@ -1616,442 +402,10 @@
       "yaxes": [
         {
           "format": "short",
-          "label": "thread count",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
           "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "$DS_PROMETHEUS",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 4000,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 200
-              },
-              {
-                "color": "red",
-                "value": 1000
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 16,
-        "y": 78
-      },
-      "id": 57,
-      "links": [],
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": true,
-        "showThresholdMarkers": true,
-        "text": {}
-      },
-      "pluginVersion": "7.5.9",
-      "targets": [
-        {
-          "expr": "sum by (name) (executor_pool_size_threads{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "instant": false,
-          "intervalFactor": 1,
-          "legendFormat": "{{name}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Async Executor Service Thread Pool Size",
-      "type": "gauge"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 86
-      },
-      "hiddenSeries": false,
-      "id": 53,
-      "legend": {
-        "alignAsTable": false,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": true,
-        "show": true,
-        "total": true,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.9",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum by (state) (jvm_threads_states_threads{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{state}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "JVM Thread States",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": "thread count",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "index": 0,
-                "value": null
-              },
-              {
-                "color": "red",
-                "index": 1,
-                "value": 80
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 0,
-        "y": 96
-      },
-      "id": 45,
-      "links": [],
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "text": {}
-      },
-      "pluginVersion": "7.5.9",
-      "targets": [
-        {
-          "expr": "sum(jvm_memory_used_bytes{area=\"heap\",  namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})*100/sum(jvm_memory_max_bytes{area=\"heap\",  namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "JVM Heap Used",
-      "type": "gauge"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 19,
-        "x": 5,
-        "y": 96
-      },
-      "hiddenSeries": false,
-      "id": 49,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.9",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "avg(system_cpu_usage{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "System",
-          "refId": "A"
-        },
-        {
-          "expr": "avg(process_cpu_usage{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Process",
-          "refId": "B"
-        },
-        {
-          "expr": "avg(avg_over_time(process_cpu_usage{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[1h]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Process (1h)",
-          "refId": "C"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "CPU Usage",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "s",
-          "label": "cpu time",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 103
-      },
-      "hiddenSeries": false,
-      "id": 43,
-      "legend": {
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.9",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum by(level) (increase(logback_events_total{ namespace=~\"$namespace\", service=~\"$service\", pod=~\"$pod\"}[1m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{level}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Log Event (1m)",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": "log count",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
           "show": true
         },
         {
@@ -2078,154 +432,58 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
-          "text": "proton-dev",
-          "value": "proton-dev"
-        },
-        "datasource": "${DS_PROMETHEUS}",
-        "definition": "label_values(http_server_requests_seconds_count{service=~\".*creditcard.*\"}, namespace)",
-        "description": null,
-        "error": null,
-        "hide": 0,
-        "includeAll": false,
-        "label": "Namespace",
-        "multi": true,
-        "name": "namespace",
-        "options": [],
-        "query": {
-          "query": "label_values(http_server_requests_seconds_count{service=~\".*creditcard.*\"}, namespace)",
-          "refId": "Prometheus Local-namespace-Variable-Query"
-        },
-        "refresh": 2,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tags": [],
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "service-creditcard-api-dev",
-          "value": "service-creditcard-api-dev"
-        },
-        "datasource": "${DS_PROMETHEUS}",
-        "definition": "label_values(http_server_requests_seconds_count{service=~\".*creditcard-api.*\", namespace=~\"$namespace\"}, service)",
-        "description": null,
-        "error": null,
-        "hide": 0,
-        "includeAll": false,
-        "label": "Service",
-        "multi": false,
-        "name": "service",
-        "options": [],
-        "query": {
-          "query": "label_values(http_server_requests_seconds_count{service=~\".*creditcard-api.*\", namespace=~\"$namespace\"}, service)",
-          "refId": "Prometheus Local-service-Variable-Query"
-        },
-        "refresh": 2,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tags": [],
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "allValue": null,
-        "current": {
           "selected": true,
+          "tags": [],
           "text": [
-            "All"
+            "ktor"
           ],
           "value": [
-            "$__all"
+            "ktor"
           ]
-        },
-        "datasource": "${DS_PROMETHEUS}",
-        "definition": "label_values(http_server_requests_seconds_count{namespace=~\"$namespace\", service=~\"$service\"}, pod)",
-        "description": null,
-        "error": null,
-        "hide": 0,
-        "includeAll": true,
-        "label": "Pod",
-        "multi": true,
-        "name": "pod",
-        "options": [],
-        "query": {
-          "query": "label_values(http_server_requests_seconds_count{namespace=~\"$namespace\", service=~\"$service\"}, pod)",
-          "refId": "Prometheus Local-pod-Variable-Query"
-        },
-        "refresh": 2,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tags": [],
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "current": {
-          "selected": true,
-          "text": "Prometheus",
-          "value": "Prometheus"
         },
         "description": null,
         "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": "",
-        "multi": false,
-        "name": "DS_PROMETHEUS",
-        "options": [],
-        "query": "prometheus",
+        "label": "framework",
+        "multi": true,
+        "name": "frmwrk",
+        "options": [
+          {
+            "selected": true,
+            "text": "ktor",
+            "value": "ktor"
+          },
+          {
+            "selected": false,
+            "text": "ktor-netty",
+            "value": "ktor-netty"
+          },
+          {
+            "selected": false,
+            "text": "spring",
+            "value": "spring"
+          },
+          {
+            "selected": false,
+            "text": "spring-reactive",
+            "value": "spring-reactive"
+          }
+        ],
+        "query": "ktor,ktor-netty,spring,spring-reactive",
         "queryValue": "",
-        "refresh": 1,
-        "regex": "",
         "skipUrlSync": false,
-        "type": "datasource"
+        "type": "custom"
       }
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-1h",
     "to": "now"
   },
-  "timepicker": {
-    "refresh_intervals": [
-      "5s",
-      "10s",
-      "30s",
-      "1m",
-      "5m",
-      "15m",
-      "30m",
-      "1h",
-      "2h",
-      "1d"
-    ],
-    "time_options": [
-      "5m",
-      "15m",
-      "1h",
-      "6h",
-      "12h",
-      "24h",
-      "2d",
-      "7d",
-      "30d"
-    ]
-  },
+  "timepicker": {},
   "timezone": "",
-  "title": "CreditCard API",
-  "uid": "7JdqBuXZk2",
+  "title": "Ktor",
+  "uid": "Lt2DSAS7z",
   "version": 1
 }

@@ -3,4 +3,4 @@ EXPOSE 8083
 
 ADD build/libs/spring-webflux.jar /opt/spring-webflux.jar
 
-CMD ["java", "-jar", "/opt/spring-webflux.jar", "-Xmx1G"]
+CMD ["java", "-jar", "/opt/spring-webflux.jar", "-Xmx2G"]

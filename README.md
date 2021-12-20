@@ -38,13 +38,23 @@ The mockserver is a KTOR server running on a Netty. When called, it will wait fo
 ## Candidates
 
 ### Spring on Tomcat
-
 The definition of classic
-### Spring-Reactive on Netty
+Apache client
 
+### Spring-Reactive on Netty
 Call stack
-### KTOR
+Apache client
+
+### KTOR on Netty
  from presentation
+ Apache client
+### KTOR on CIO Engine
+Apache client
+### Node
+
 ## Result
 
 ## Resume
+
+## Side Notes
+Problems with CIO Client

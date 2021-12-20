@@ -19,7 +19,7 @@ fun Application.configureMicrometer() {
     install(MicrometerMetrics) {
         registry = appMicrometerRegistry
 
-        timers { call, exception -> tag("framework", "ktor") }
+        timers { _, _ -> tag("framework", "ktor") }
     }
 
     routing {
