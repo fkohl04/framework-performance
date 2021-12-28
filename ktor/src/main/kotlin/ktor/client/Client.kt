@@ -1,4 +1,4 @@
-package ktor.modules.performance.client
+package ktor.client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -11,5 +11,4 @@ class ThirdPartyClient(private val serverUrl: String, private val serverPort: St
 
     suspend fun fetchData() = client.get<HttpResponse>("$serverUrl:$serverPort")
         .readText()
-        .toInt()
 }

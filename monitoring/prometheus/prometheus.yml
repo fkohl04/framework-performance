@@ -30,6 +30,13 @@ scrape_configs:
         labels:
           framework: ktor-netty
 
+  - job_name: 'ktor-tomcat'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: [ 'host.docker.internal:8085' ]
+        labels:
+          framework: ktor-tomcat
+
   - job_name: 'spring-reactive'
     metrics_path: '/actuator/prometheus'
     static_configs:

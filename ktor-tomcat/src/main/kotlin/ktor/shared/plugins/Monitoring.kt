@@ -1,4 +1,4 @@
-package mockserver.shared.plugins
+package ktor.shared.plugins
 
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -16,7 +16,7 @@ fun Application.configureMicrometer() {
     install(MicrometerMetrics) {
         registry = appMicrometerRegistry
 
-        timers { _, _ -> tag("framework", "mockserver") }
+        timers { _, _ -> tag("framework", "ktor-tomcat") }
     }
 
     routing {

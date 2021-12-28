@@ -483,6 +483,11 @@
           },
           {
             "selected": true,
+            "text": "ktor-tomcat",
+            "value": "ktor-tomcat"
+          },
+          {
+            "selected": true,
             "text": "spring",
             "value": "spring"
           },
@@ -497,7 +502,7 @@
             "value": "mockserver"
           }
         ],
-        "query": "ktor,ktor-netty,spring,spring-netty,mockserver",
+        "query": "ktor,ktor-netty,ktor-tomcat,spring,spring-netty,mockserver",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
