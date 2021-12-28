@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1640729970455,
+  "iteration": 1640733649381,
   "links": [],
   "panels": [
     {
@@ -70,7 +70,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum (rate(ktor_http_server_requests_seconds_count{framework=~\"$frmwrk\"}[1m]) ) by (framework)",
+          "expr": "sum (rate(ktor_http_server_requests_seconds_count{framework=~\"$frmwrk\", route=\"/\"}[1m]) ) by (framework)",
           "interval": "",
           "legendFormat": "{{framework}}",
           "queryType": "randomWalk",
@@ -78,7 +78,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (rate(http_server_requests_seconds_count{framework=~\"$frmwrk\"}[1m]) ) by (framework)",
+          "expr": "sum (rate(http_server_requests_seconds_count{framework=~\"$frmwrk\", uri=\"/\"}[1m]) ) by (framework)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{framework}}",
@@ -86,10 +86,10 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (rate(nodejs_gc_duration_seconds_count{framework=~\"$frmwrk\"}[1m]) ) by (framework)",
+          "expr": "sum (rate(http_request_duration_seconds_count{framework=~\"$frmwrk\", route=\"/\"}[1m]) ) by (framework)",
           "hide": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{framework}}",
           "refId": "C"
         }
       ],
@@ -199,10 +199,10 @@
         },
         {
           "exemplar": true,
-          "expr": "rate(nodejs_gc_duration_seconds_sum{ framework=~\"$frmwrk\" }[1m]) / rate(nodejs_gc_duration_seconds_count{ framework=~\"$frmwrk\" }[1m])",
+          "expr": "rate(http_request_duration_seconds_sum{ framework=~\"$frmwrk\", route=\"/\" }[1m]) / rate(http_request_duration_seconds_count{ framework=~\"$frmwrk\", route=\"/\" }[1m])",
           "hide": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{framework}} ",
           "refId": "C"
         }
       ],
@@ -480,15 +480,22 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "tags": [],
+          "selected": false,
           "text": [
             "spring",
-            "node"
+            "node",
+            "ktor",
+            "ktor-netty",
+            "ktor-tomcat",
+            "spring-netty"
           ],
           "value": [
             "spring",
-            "node"
+            "node",
+            "ktor",
+            "ktor-netty",
+            "ktor-tomcat",
+            "spring-netty"
           ]
         },
         "description": null,
@@ -500,17 +507,17 @@
         "name": "frmwrk",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "ktor",
             "value": "ktor"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "ktor-netty",
             "value": "ktor-netty"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "ktor-tomcat",
             "value": "ktor-tomcat"
           },
@@ -520,7 +527,7 @@
             "value": "spring"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "spring-netty",
             "value": "spring-netty"
           },
@@ -543,12 +550,12 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Ktor",
   "uid": "Lt2DSAS7z",
-  "version": 2
+  "version": 3
 }
