@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1640039449226,
+  "iteration": 1640688580848,
   "links": [],
   "panels": [
     {
@@ -75,6 +75,14 @@
           "legendFormat": "{{framework}}",
           "queryType": "randomWalk",
           "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum (rate(http_server_requests_seconds_count{framework=~\"$frmwrk\"}[1m]) ) by (framework)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{framework}}",
+          "refId": "B"
         }
       ],
       "thresholds": [],
@@ -167,11 +175,19 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(ktor_http_server_requests_seconds_sum{ framework=~\"$frmwrk\" }[1m]) / rate(ktor_http_server_requests_seconds_count{ framework=~\"$frmwrk\" }[1m])",
+          "expr": "rate(ktor_http_server_requests_seconds_sum{ framework=~\"$frmwrk\", route=\"/\" }[1m]) / rate(ktor_http_server_requests_seconds_count{ framework=~\"$frmwrk\", route=\"/\" }[1m])",
           "interval": "",
           "legendFormat": "{{framework}} {{ status }} ",
           "queryType": "randomWalk",
           "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(rate(http_server_requests_seconds_sum{ framework=~\"$frmwrk\", uri=\"/\" }[1m]) / rate(http_server_requests_seconds_count{ framework=~\"$frmwrk\", uri=\"/\" }[1m])) by (framework, status)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{framework}} {{ status }} ",
+          "refId": "B"
         }
       ],
       "thresholds": [],
@@ -271,7 +287,7 @@
         },
         {
           "exemplar": false,
-          "expr": "sum(jvm_memory_used_bytes{framework=~\"$frmwrk\"}) ",
+          "expr": "sum(jvm_memory_used_bytes{framework=~\"$frmwrk\"}) by (framework)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{framework}}",
@@ -435,10 +451,16 @@
           "selected": true,
           "tags": [],
           "text": [
-            "ktor"
+            "ktor",
+            "ktor-netty",
+            "spring",
+            "spring-netty"
           ],
           "value": [
-            "ktor"
+            "ktor",
+            "ktor-netty",
+            "spring",
+            "spring-netty"
           ]
         },
         "description": null,
@@ -455,22 +477,27 @@
             "value": "ktor"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "ktor-netty",
             "value": "ktor-netty"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "spring",
             "value": "spring"
           },
           {
+            "selected": true,
+            "text": "spring-netty",
+            "value": "spring-netty"
+          },
+          {
             "selected": false,
-            "text": "spring-reactive",
-            "value": "spring-reactive"
+            "text": "mockserver",
+            "value": "mockserver"
           }
         ],
-        "query": "ktor,ktor-netty,spring,spring-reactive",
+        "query": "ktor,ktor-netty,spring,spring-netty,mockserver",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"

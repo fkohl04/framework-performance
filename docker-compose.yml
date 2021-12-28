@@ -6,6 +6,10 @@ services:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    depends_on:
+      - mockserver1
+      - mockserver2
+      - mockserver3
   grafana:
     image: grafana/grafana:7.5.10
     volumes:
@@ -14,31 +18,46 @@ services:
       - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
     ports:
       - "3000:3000"
-  mockserver:
+    depends_on:
+      - prometheus
+  mockserver1:
     build: mockserver
+  mockserver2:
+    build: mockserver
+  mockserver3:
+    build: mockserver
+  haproxy:
+    image: haproxytech/haproxy-alpine:2.4
     ports:
       - "8080:8080"
+      - "8404:8404"
+    volumes:
+      - "./mockserver:/usr/local/etc/haproxy:ro"
+    depends_on:
+      - mockserver1
+      - mockserver2
+      - mockserver3
   ktor:
     build: ktor
     ports:
       - "8081:8081"
     environment:
-      THIRD_PARTY_URL: "http://host.docker.internal"
+      THIRD_PARTY_URL: "http://haproxy"
   ktor-netty:
     build: ktor-netty
     ports:
       - "8082:8082"
     environment:
-      THIRD_PARTY_URL: "http://host.docker.internal"
+      THIRD_PARTY_URL: "http://haproxy"
   spring-webflux:
     build: spring-webflux
     ports:
       - "8083:8083"
     environment:
-      THIRD_PARTY_URL: "http://host.docker.internal"
+      THIRD_PARTY_URL: "http://haproxy"
   spring:
     build: spring
     ports:
       - "8084:8084"
     environment:
-      THIRD_PARTY_URL: "http://host.docker.internal"
+      THIRD_PARTY_URL: "http://haproxy"
