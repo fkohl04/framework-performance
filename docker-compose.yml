@@ -67,3 +67,9 @@ services:
       - "8085:8085"
     environment:
       THIRD_PARTY_URL: "http://haproxy"
+  node:
+    build: node
+    ports:
+      - "8086:8086"
+    environment:
+      THIRD_PARTY_URL: "http://haproxy"

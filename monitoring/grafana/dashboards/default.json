@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1640688580848,
+  "iteration": 1640729970455,
   "links": [],
   "panels": [
     {
@@ -83,6 +83,14 @@
           "interval": "",
           "legendFormat": "{{framework}}",
           "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum (rate(nodejs_gc_duration_seconds_count{framework=~\"$frmwrk\"}[1m]) ) by (framework)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "C"
         }
       ],
       "thresholds": [],
@@ -188,6 +196,14 @@
           "interval": "",
           "legendFormat": "{{framework}} {{ status }} ",
           "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "rate(nodejs_gc_duration_seconds_sum{ framework=~\"$frmwrk\" }[1m]) / rate(nodejs_gc_duration_seconds_count{ framework=~\"$frmwrk\" }[1m])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "C"
         }
       ],
       "thresholds": [],
@@ -300,6 +316,22 @@
           "interval": "",
           "legendFormat": "{{framework}}-{{id}}",
           "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "process_resident_memory_bytes{framework=~\"$frmwrk\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{framework}}-resident",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "process_heap_bytes{framework=~\"$frmwrk\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{framework}}-heap",
+          "refId": "E"
         }
       ],
       "thresholds": [],
@@ -451,16 +483,12 @@
           "selected": true,
           "tags": [],
           "text": [
-            "ktor",
-            "ktor-netty",
             "spring",
-            "spring-netty"
+            "node"
           ],
           "value": [
-            "ktor",
-            "ktor-netty",
             "spring",
-            "spring-netty"
+            "node"
           ]
         },
         "description": null,
@@ -472,17 +500,17 @@
         "name": "frmwrk",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "ktor",
             "value": "ktor"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "ktor-netty",
             "value": "ktor-netty"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "ktor-tomcat",
             "value": "ktor-tomcat"
           },
@@ -492,9 +520,14 @@
             "value": "spring"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "spring-netty",
             "value": "spring-netty"
+          },
+          {
+            "selected": true,
+            "text": "node",
+            "value": "node"
           },
           {
             "selected": false,
@@ -502,7 +535,7 @@
             "value": "mockserver"
           }
         ],
-        "query": "ktor,ktor-netty,ktor-tomcat,spring,spring-netty,mockserver",
+        "query": "ktor,ktor-netty,ktor-tomcat,spring,spring-netty,mockserver,node",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
@@ -510,12 +543,12 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Ktor",
   "uid": "Lt2DSAS7z",
-  "version": 1
+  "version": 2
 }

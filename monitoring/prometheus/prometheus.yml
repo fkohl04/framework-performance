@@ -50,3 +50,10 @@ scrape_configs:
       - targets: [ 'host.docker.internal:8084' ]
         labels:
           framework: spring
+
+  - job_name: 'node'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: [ 'host.docker.internal:8086' ]
+        labels:
+          framework: node
