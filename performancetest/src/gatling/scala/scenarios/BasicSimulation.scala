@@ -24,6 +24,7 @@ class BasicSimulation extends Simulation {
         .check(status.is(200))
     }
 
-  setUp(scn.inject(constantConcurrentUsers(userCount)  during (duration seconds))
+  setUp(scn.inject(constantUsersPerSec(userCount)  during (duration seconds))
     .protocols(httpProtocol.build))
+    .assertions(global.successfulRequests.percent.gt(90))
 }
