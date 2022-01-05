@@ -13,7 +13,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/ktor" />
             <option value="$PROJECT_DIR$/ktor-netty" />
-            <option value="$PROJECT_DIR$/ktor-tomcat" />
+            <option value="$PROJECT_DIR$/micro" />
             <option value="$PROJECT_DIR$/mockserver" />
             <option value="$PROJECT_DIR$/node" />
             <option value="$PROJECT_DIR$/performancetest" />

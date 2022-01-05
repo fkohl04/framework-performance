@@ -2,15 +2,21 @@ package vertx.demo
 
 import io.vertx.config.ConfigRetriever
 import io.vertx.core.AbstractVerticle
+import io.vertx.core.Vertx
+import io.vertx.core.VertxOptions
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.client.HttpRequest
 import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.codec.BodyCodec
+import io.vertx.micrometer.MicrometerMetricsOptions
+import io.vertx.micrometer.PrometheusScrapingHandler
+import io.vertx.micrometer.VertxPrometheusOptions
+
 
 class MainVerticle : AbstractVerticle() {
 
     override fun start() {
-        val router = Router.router(vertx)
+
         val config = ConfigRetriever.create(vertx)
 
         lateinit var thirdPartyUrl: String
@@ -28,7 +34,19 @@ class MainVerticle : AbstractVerticle() {
             .get(thirdPartyPort.toInt(), thirdPartyUrl, "/")
             .`as`(BodyCodec.string())
 
-        router.route().handler { context ->
+        val vertx = Vertx.vertx(
+            VertxOptions().setMetricsOptions(
+                MicrometerMetricsOptions()
+                    .setPrometheusOptions(VertxPrometheusOptions().setEnabled(true))
+                    .setEnabled(true)
+            )
+        )
+
+        val router = Router.router(vertx)
+
+        router.route("/metrics").handler(PrometheusScrapingHandler.create())
+
+        router.route("/").handler { context ->
             request.send { asyncResult ->
                 if (asyncResult.succeeded()) {
                     val body = asyncResult.result().body()

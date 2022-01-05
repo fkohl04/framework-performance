@@ -61,8 +61,8 @@ services:
       - "8084:8084"
     environment:
       THIRD_PARTY_URL: "http://haproxy"
-  ktor-tomcat:
-    build: ktor-tomcat
+  micro:
+    build: micro
     ports:
       - "8085:8085"
     environment:

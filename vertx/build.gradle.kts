@@ -33,6 +33,8 @@ dependencies {
   implementation("io.vertx:vertx-config")
   implementation("io.vertx:vertx-web")
   implementation("io.vertx:vertx-lang-kotlin")
+  implementation("io.vertx:vertx-micrometer-metrics:4.2.3")
+  implementation("io.micrometer:micrometer-registry-prometheus:1.8.1")
   implementation(kotlin("stdlib-jdk8"))
 }
 

@@ -1,0 +1,20 @@
+micronaut:
+  server:
+    port: 8085
+  application:
+    name: micro
+  metrics:
+    enabled: true
+    export:
+      prometheus:
+        enabled: true
+        descriptions: true
+        step: PT1M
+
+third.party:
+  url: "http://localhost"
+  port: "8080"
+
+endpoints:
+  prometheus:
+    sensitive: false

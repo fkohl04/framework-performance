@@ -14,7 +14,7 @@ fun Application.configureRouting() {
     routing {
         route("/") {
             get {
-                delay(1000)
+                delay(500)
                 call.respond(Random.nextInt(0, 100000))
             }
         }

@@ -486,16 +486,18 @@
             "node",
             "ktor",
             "ktor-netty",
-            "ktor-tomcat",
-            "spring-netty"
+            "micronaut",
+            "spring-netty",
+            "vertx"
           ],
           "value": [
             "spring",
             "node",
             "ktor",
             "ktor-netty",
-            "ktor-tomcat",
-            "spring-netty"
+            "micronaut",
+            "spring-netty",
+            "vertx"
           ]
         },
         "description": null,
@@ -518,8 +520,8 @@
           },
           {
             "selected": true,
-            "text": "ktor-tomcat",
-            "value": "ktor-tomcat"
+            "text": "micronaut",
+            "value": "micronaut"
           },
           {
             "selected": true,
@@ -537,12 +539,17 @@
             "value": "node"
           },
           {
+             "selected": true,
+             "text": "vertx",
+             "value": "vertx"
+           },
+          {
             "selected": false,
             "text": "mockserver",
             "value": "mockserver"
           }
         ],
-        "query": "ktor,ktor-netty,ktor-tomcat,spring,spring-netty,mockserver,node",
+        "query": "ktor,ktor-netty,micronaut,spring,spring-netty,mockserver,node,vertx",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
