@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1640733649381,
+  "iteration": 1641426427178,
   "links": [],
   "panels": [
     {
@@ -78,7 +78,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (rate(http_server_requests_seconds_count{framework=~\"$frmwrk\", uri=\"/\"}[1m]) ) by (framework)",
+          "expr": "sum (rate(http_server_requests_seconds_count{framework=~\"$frmwrk\", uri=~\"/|root\"}[1m]) ) by (framework)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{framework}}",
@@ -91,6 +91,14 @@
           "interval": "",
           "legendFormat": "{{framework}}",
           "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum (rate(vertx_http_server_requests_total{framework=~\"$frmwrk\", route=\"/\"}[1m]) ) by (framework)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{framework}}",
+          "refId": "D"
         }
       ],
       "thresholds": [],
@@ -191,7 +199,7 @@
         },
         {
           "exemplar": true,
-          "expr": "avg(rate(http_server_requests_seconds_sum{ framework=~\"$frmwrk\", uri=\"/\" }[1m]) / rate(http_server_requests_seconds_count{ framework=~\"$frmwrk\", uri=\"/\" }[1m])) by (framework, status)",
+          "expr": "avg((rate(http_server_requests_seconds_sum{ framework=~\"$frmwrk\", uri=~\"/|root\" }[1m]) / rate(http_server_requests_seconds_count{ framework=~\"$frmwrk\", uri=~\"/|root\" }[1m]))>0) by (framework, status)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{framework}} {{ status }} ",
@@ -204,6 +212,14 @@
           "interval": "",
           "legendFormat": "{{framework}} ",
           "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "rate(vertx_http_server_response_time_seconds_sum{ framework=~\"$frmwrk\", route=\"/\" }[1m]) / rate(vertx_http_server_response_time_seconds_count{ framework=~\"$frmwrk\", route=\"/\" }[1m])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{framework}} {{ code }} ",
+          "refId": "D"
         }
       ],
       "thresholds": [],
@@ -539,10 +555,10 @@
             "value": "node"
           },
           {
-             "selected": true,
-             "text": "vertx",
-             "value": "vertx"
-           },
+            "selected": true,
+            "text": "vertx",
+            "value": "vertx"
+          },
           {
             "selected": false,
             "text": "mockserver",
@@ -564,5 +580,5 @@
   "timezone": "",
   "title": "Ktor",
   "uid": "Lt2DSAS7z",
-  "version": 3
+  "version": 14
 }
