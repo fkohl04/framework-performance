@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/performancetest" />
             <option value="$PROJECT_DIR$/spring" />
             <option value="$PROJECT_DIR$/spring-webflux" />
+            <option value="$PROJECT_DIR$/vertx" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -73,3 +73,9 @@ services:
       - "8086:8086"
     environment:
       THIRD_PARTY_URL: "http://haproxy"
+  vertx:
+    build: vertx
+    ports:
+      - "8087:8087"
+    environment:
+      THIRD_PARTY_URL: "haproxy"
