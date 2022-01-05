@@ -21,7 +21,7 @@ scrape_configs:
     static_configs:
       - targets: [ 'host.docker.internal:8081' ]
         labels:
-          framework: ktor
+          framework: ktor-cio
 
   - job_name: 'ktor-netty'
     metrics_path: '/metrics'
