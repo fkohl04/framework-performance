@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -20,9 +19,6 @@ val vertxVersion = "4.2.3"
 val mainVerticleName = "vertx.demo.MainVerticle"
 val launcherClassName = "io.vertx.core.Launcher"
 
-val watchForChange = "src/**/*"
-val doOnChange = "${projectDir}/gradlew classes"
-
 application {
   mainClass.set(launcherClassName)
 }
@@ -32,6 +28,7 @@ dependencies {
   implementation("io.vertx:vertx-web-client")
   implementation("io.vertx:vertx-config")
   implementation("io.vertx:vertx-web")
+  implementation("io.netty:netty-all:4.1.68.Final.")
   implementation("io.vertx:vertx-lang-kotlin")
   implementation("io.vertx:vertx-micrometer-metrics:4.2.3")
   implementation("io.micrometer:micrometer-registry-prometheus:1.8.1")
@@ -47,15 +44,4 @@ tasks.withType<ShadowJar> {
     attributes(mapOf("Main-Verticle" to mainVerticleName))
   }
   mergeServiceFiles()
-}
-
-tasks.withType<Test> {
-  useJUnitPlatform()
-  testLogging {
-    events = setOf(PASSED, SKIPPED, FAILED)
-  }
-}
-
-tasks.withType<JavaExec> {
-  args = listOf("run", mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$launcherClassName", "--on-redeploy=$doOnChange")
 }

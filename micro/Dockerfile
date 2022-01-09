@@ -3,4 +3,4 @@ EXPOSE 8085
 
 ADD build/libs/micro-0.1-all.jar /opt/micro.jar
 
-CMD ["java", "-jar", "/opt/micro.jar", "-Xmx2G"]
+CMD ["java", "-jar", "/opt/micro.jar", "-Xmx512m"]

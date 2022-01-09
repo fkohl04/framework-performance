@@ -3,4 +3,4 @@ EXPOSE 8087
 
 ADD build/libs/vertx-1.0.0-fat.jar /opt/vertx.jar
 
-CMD ["java", "-jar", "/opt/vertx.jar", "-Xmx2G"]
+CMD ["java", "-jar", "/opt/vertx.jar", "-Xmx512m"]
