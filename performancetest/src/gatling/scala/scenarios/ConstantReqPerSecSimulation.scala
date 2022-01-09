@@ -9,7 +9,7 @@ import io.gatling.http.protocol.HttpProtocolBuilder.toHttpProtocol
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class BasicSimulation extends Simulation {
+class ConstantReqPerSecSimulation extends Simulation {
   val userCount: Int = sys.env.getOrElse("USER_COUNT", "100").toInt
   val duration: Int = sys.env.getOrElse("DURATION", "60").toInt
   val url: String = sys.env.getOrElse("SUT_URL", "http://localhost:8081")

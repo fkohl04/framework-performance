@@ -1,6 +1,5 @@
 package micro.controller
 
-
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
@@ -9,7 +8,7 @@ import micro.datasource.ThirdPartyClient
 import reactor.core.publisher.Mono
 
 @Controller("/")
-class HelloController(private val thirdPartyClient: ThirdPartyClient) {
+class ServiceController(private val thirdPartyClient: ThirdPartyClient) {
 
     @Get
     @Produces(MediaType.TEXT_PLAIN)

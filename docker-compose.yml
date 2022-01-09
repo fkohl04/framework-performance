@@ -79,3 +79,12 @@ services:
       - "8087:8087"
     environment:
       THIRD_PARTY_URL: "haproxy"
+  cadvisor:
+    image: google/cadvisor:latest
+    ports:
+      - '8079:8080'
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
