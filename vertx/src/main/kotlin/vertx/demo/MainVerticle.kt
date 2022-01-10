@@ -14,7 +14,7 @@ import io.vertx.micrometer.VertxPrometheusOptions
 
 fun main() {
     val vertx = configureVertxWithPrometheus()
-    vertx.deployVerticle(MainVerticle::class.java, DeploymentOptions().setInstances(4))
+    vertx.deployVerticle(MainVerticle::class.java, DeploymentOptions().setInstances(100))
 }
 
 private fun configureVertxWithPrometheus() = Vertx.vertx(

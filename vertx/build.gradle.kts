@@ -16,11 +16,19 @@ repositories {
 
 val vertxVersion = "4.2.3"
 
-val mainVerticleName = "vertx.demo.MainVerticle"
-val launcherClassName = "io.vertx.core.Launcher"
+val mainVerticleName = "vertx.demo.MainVerticleKt"
 
 application {
-  mainClass.set(launcherClassName)
+  mainClass.set(mainVerticleName)
+}
+
+tasks{
+  shadowJar {
+    archiveClassifier.set("fat")
+    manifest {
+      attributes(Pair("Main-Class", mainVerticleName))
+    }
+  }
 }
 
 dependencies {
@@ -37,11 +45,3 @@ dependencies {
 
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions.jvmTarget = "11"
-
-tasks.withType<ShadowJar> {
-  archiveClassifier.set("fat")
-  manifest {
-    attributes(mapOf("Main-Verticle" to mainVerticleName))
-  }
-  mergeServiceFiles()
-}
