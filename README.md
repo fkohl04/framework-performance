@@ -1,5 +1,7 @@
 # framework-performance
 
+This repository serves as base for a blog entry. If you want to retrace the explained testing result see [this chapter.](#how-to-execute-the-test--not-part-of-blog-entry)
+
 ## Motivation
 
 During the development of distributed applications their performance is always a crucial part. Every application is
@@ -167,7 +169,7 @@ asynchronous code looks [nearly like synchronous code](https://kotlinlang.org/do
 You don't have to learn or get used to completely new patterns, but can just write code that is easy to read and has the
 potential to deliver a high performant result by being asynchronous.
 
-## Side Notes ( Not part of blog entry)
+## How to execute the test ( Not part of blog entry)
 
 All tested services are available as docker containers. To start the test environment, simply start
 the [docker-compose file](docker-compose.yml).
