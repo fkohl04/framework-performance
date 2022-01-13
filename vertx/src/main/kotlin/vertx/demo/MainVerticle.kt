@@ -7,6 +7,7 @@ import io.vertx.core.Vertx
 import io.vertx.core.VertxOptions
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.client.WebClient
+import io.vertx.ext.web.client.WebClientOptions
 import io.vertx.ext.web.codec.BodyCodec
 import io.vertx.micrometer.MicrometerMetricsOptions
 import io.vertx.micrometer.PrometheusScrapingHandler
@@ -14,7 +15,7 @@ import io.vertx.micrometer.VertxPrometheusOptions
 
 fun main() {
     val vertx = configureVertxWithPrometheus()
-    vertx.deployVerticle(MainVerticle::class.java, DeploymentOptions().setInstances(300))
+    vertx.deployVerticle(MainVerticle::class.java, DeploymentOptions().setInstances(4))
 }
 
 private fun configureVertxWithPrometheus() = Vertx.vertx(
@@ -57,9 +58,9 @@ class MainVerticle : AbstractVerticle() {
         thirdPartyPort: String,
         thirdPartyUrl: String
     ): Router {
-        val client = WebClient.create(this)
-
+        val client = WebClient.create(this, WebClientOptions().setMaxPoolSize(500))
         val router = Router.router(this)
+
         router.route("/metrics").handler(PrometheusScrapingHandler.create())
         router.route("/").handler { context ->
             client.get(thirdPartyPort.toInt(), thirdPartyUrl, "/")
