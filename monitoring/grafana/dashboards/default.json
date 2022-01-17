@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1641426427178,
+  "iteration": 1642361719335,
   "links": [],
   "panels": [
     {
@@ -191,18 +191,18 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(ktor_http_server_requests_seconds_sum{ framework=~\"$frmwrk\", route=\"/\" }[1m]) / rate(ktor_http_server_requests_seconds_count{ framework=~\"$frmwrk\", route=\"/\" }[1m])",
+          "expr": "rate(ktor_http_server_requests_seconds_sum{ framework=~\"$frmwrk\", route=\"/\", status = \"200\" }[1m]) / rate(ktor_http_server_requests_seconds_count{ framework=~\"$frmwrk\", route=\"/\", status = \"200\" }[1m])",
           "interval": "",
-          "legendFormat": "{{framework}} {{ status }} ",
+          "legendFormat": "{{framework}}",
           "queryType": "randomWalk",
           "refId": "A"
         },
         {
           "exemplar": true,
-          "expr": "avg((rate(http_server_requests_seconds_sum{ framework=~\"$frmwrk\", uri=~\"/|root\" }[1m]) / rate(http_server_requests_seconds_count{ framework=~\"$frmwrk\", uri=~\"/|root\" }[1m]))>0) by (framework, status)",
+          "expr": "avg((rate(http_server_requests_seconds_sum{ framework=~\"$frmwrk\", uri=~\"/|root\", status = \"200\" }[1m]) / rate(http_server_requests_seconds_count{ framework=~\"$frmwrk\", uri=~\"/|root\", status = \"200\" }[1m]))>0) by (framework, status)",
           "hide": false,
           "interval": "",
-          "legendFormat": "{{framework}} {{ status }} ",
+          "legendFormat": "{{framework}}",
           "refId": "B"
         },
         {
@@ -215,10 +215,10 @@
         },
         {
           "exemplar": true,
-          "expr": "rate(vertx_http_server_response_time_seconds_sum{ framework=~\"$frmwrk\", route=\"/\" }[1m]) / rate(vertx_http_server_response_time_seconds_count{ framework=~\"$frmwrk\", route=\"/\" }[1m])",
+          "expr": "rate(vertx_http_server_response_time_seconds_sum{ framework=~\"$frmwrk\", route=\"/\", code=\"200\" }[1m]) / rate(vertx_http_server_response_time_seconds_count{ framework=~\"$frmwrk\", route=\"/\", code=\"200\" }[1m])",
           "hide": false,
           "interval": "",
-          "legendFormat": "{{framework}} {{ code }} ",
+          "legendFormat": "{{framework}}",
           "refId": "D"
         }
       ],
@@ -243,6 +243,102 @@
       "yaxes": [
         {
           "format": "s",
+          "label": null,
+          "logBase": 1,
+          "max": "5",
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 22,
+        "x": 0,
+        "y": 15
+      },
+      "hiddenSeries": false,
+      "id": 12,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.10",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "container_memory_usage_bytes{id =~ \"/docker/.*\", name=~\"$frmwrk\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ name }}",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Memory usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -276,10 +372,105 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 7,
+        "w": 22,
         "x": 0,
-        "y": 15
+        "y": 23
+      },
+      "hiddenSeries": false,
+      "id": 10,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.10",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum ( rate(container_cpu_usage_seconds_total{id =~ \"/docker/.*\", name=~\"$frmwrk\" } [1m]) ) by (name) ",
+          "interval": "",
+          "legendFormat": "{{ name }}",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 20,
+        "x": 0,
+        "y": 30
       },
       "hiddenSeries": false,
       "id": 8,
@@ -318,25 +509,9 @@
           "refId": "A"
         },
         {
-          "exemplar": false,
-          "expr": "sum(jvm_memory_used_bytes{framework=~\"$frmwrk\"}) by (framework)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{framework}}",
-          "refId": "B"
-        },
-        {
-          "exemplar": false,
-          "expr": "sum(jvm_buffer_memory_used_bytes{framework=~\"$frmwrk\"}) by (id, framework)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{framework}}-{{id}}",
-          "refId": "C"
-        },
-        {
           "exemplar": true,
           "expr": "process_resident_memory_bytes{framework=~\"$frmwrk\"}",
-          "hide": false,
+          "hide": true,
           "interval": "",
           "legendFormat": "{{framework}}-resident",
           "refId": "D"
@@ -344,7 +519,7 @@
         {
           "exemplar": true,
           "expr": "process_heap_bytes{framework=~\"$frmwrk\"}",
-          "hide": false,
+          "hide": true,
           "interval": "",
           "legendFormat": "{{framework}}-heap",
           "refId": "E"
@@ -404,10 +579,10 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 15
+        "h": 7,
+        "w": 20,
+        "x": 0,
+        "y": 37
       },
       "hiddenSeries": false,
       "id": 2,
@@ -496,23 +671,24 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
+          "selected": true,
+          "tags": [],
           "text": [
-            "spring",
-            "node",
             "ktor-cio",
             "ktor-netty",
             "micronaut",
+            "spring",
             "spring-reactive",
+            "node",
             "vertx"
           ],
           "value": [
-            "spring",
-            "node",
             "ktor-cio",
             "ktor-netty",
             "micronaut",
+            "spring",
             "spring-reactive",
+            "node",
             "vertx"
           ]
         },
@@ -573,12 +749,12 @@
     ]
   },
   "time": {
-    "from": "now-30m",
-    "to": "now"
+    "from": "2022-01-12T15:59:47.305Z",
+    "to": "2022-01-12T20:42:13.663Z"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Ktor",
   "uid": "Lt2DSAS7z",
-  "version": 14
+  "version": 1
 }

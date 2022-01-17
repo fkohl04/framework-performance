@@ -2,6 +2,7 @@ version: '2'
 services:
   prometheus:
     image: prom/prometheus:v2.29.1
+    container_name: prometheus
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
@@ -12,6 +13,7 @@ services:
       - mockserver3
   grafana:
     image: grafana/grafana:7.5.10
+    container_name: grafana
     volumes:
       - ./monitoring/grafana/provisioning/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
       - ./monitoring/grafana/provisioning/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
@@ -22,12 +24,22 @@ services:
       - prometheus
   mockserver1:
     build: mockserver
+    container_name: mockserver1
+    environment:
+      DELAY: 1000
   mockserver2:
     build: mockserver
+    container_name: mockserver2
+    environment:
+      DELAY: 1000
   mockserver3:
     build: mockserver
+    container_name: mockserver3
+    environment:
+      DELAY: 1000
   haproxy:
     image: haproxytech/haproxy-alpine:2.4
+    container_name: haproxy
     ports:
       - "8080:8080"
       - "8404:8404"
@@ -37,50 +49,58 @@ services:
       - mockserver1
       - mockserver2
       - mockserver3
-  ktor:
+  ktor-cio:
     build: ktor
+    container_name: ktor-cio
     ports:
       - "8081:8081"
     environment:
       THIRD_PARTY_URL: "http://haproxy"
   ktor-netty:
     build: ktor-netty
+    container_name: ktor-netty
     ports:
       - "8082:8082"
     environment:
       THIRD_PARTY_URL: "http://haproxy"
-  spring-webflux:
+  spring-reactive:
     build: spring-webflux
+    container_name: spring-reactive
     ports:
       - "8083:8083"
     environment:
       THIRD_PARTY_URL: "http://haproxy"
   spring:
     build: spring
+    container_name: spring
     ports:
       - "8084:8084"
     environment:
       THIRD_PARTY_URL: "http://haproxy"
   micro:
     build: micro
+    container_name: micronaut
     ports:
       - "8085:8085"
     environment:
       THIRD_PARTY_URL: "http://haproxy"
   node:
     build: node
+    container_name: node
     ports:
       - "8086:8086"
     environment:
       THIRD_PARTY_URL: "http://haproxy"
   vertx:
     build: vertx
+    container_name: vertx
     ports:
       - "8087:8087"
     environment:
       THIRD_PARTY_URL: "haproxy"
   cadvisor:
     image: google/cadvisor:latest
+    container_name: cadvisor
     ports:
       - '8079:8080'
     volumes:
@@ -88,3 +108,6 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      #- /cgroup:/cgroup:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
