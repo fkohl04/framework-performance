@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1642361719335,
+  "iteration": 1642410818341,
   "links": [],
   "panels": [
     {
@@ -277,20 +277,22 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 22,
+        "w": 24,
         "x": 0,
         "y": 15
       },
       "hiddenSeries": false,
       "id": 12,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -373,7 +375,7 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 7,
-        "w": 22,
+        "w": 24,
         "x": 0,
         "y": 23
       },
@@ -382,11 +384,12 @@
       "legend": {
         "avg": false,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -406,7 +409,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum ( rate(container_cpu_usage_seconds_total{id =~ \"/docker/.*\", name=~\"$frmwrk\" } [1m]) ) by (name) ",
+          "expr": "sum (container_cpu_usage_seconds_total{id =~ \"/docker/.*\", name=~\"$frmwrk\" } ) by (name) ",
           "interval": "",
           "legendFormat": "{{ name }}",
           "queryType": "randomWalk",
@@ -433,7 +436,7 @@
       },
       "yaxes": [
         {
-          "format": "short",
+          "format": "s",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -671,8 +674,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "tags": [],
+          "selected": false,
           "text": [
             "ktor-cio",
             "ktor-netty",
@@ -749,12 +751,12 @@
     ]
   },
   "time": {
-    "from": "2022-01-12T15:59:47.305Z",
-    "to": "2022-01-12T20:42:13.663Z"
+    "from": "2022-01-17T11:06:21.154Z",
+    "to": "2022-01-17T11:36:22.763Z"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Ktor",
   "uid": "Lt2DSAS7z",
-  "version": 1
+  "version": 2
 }
