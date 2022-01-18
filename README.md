@@ -18,17 +18,17 @@ of you may have discussed the following questions:
 1. Can we deploy more instances of our application?
 
    Sometimes this is possible! Especially applications that are developed for cloud infrastructure can be easily scaled
-   up and down so that the sum of deployed application has exactly the desired performance. But multiple instances also
+   up and down so that the sum of deployed services has exactly the desired performance. But multiple instances also
    require the multiple of resources and resources are expensive or sometimes not even available. On top of this, this
    solution is not improving the performance of the application itself.
 
 2. Are we able to improve the existing processing logic?
 
    Is there any potential for parallelization, is there any possibility for caching mechanisms, ...? The refactoring of
-   existing logic should be a continuous process during development of any software. This refactoring also includes
-   performance relevant improvements. Each improvement is future-oriented and improving logic is the best means when
-   trying to build a long term solution for performance problems. But having to search with limited time for possible
-   improvements in a complex system can be a hard, cumbersome and a maybe impossible task.
+   existing logic should be a continuous process during development of any software. This also includes the continuous
+   search for performance issues. Each issue you fix and each improvement you make is a future-oriented step and the
+   best means when trying to build a long term solution for performance problems. But having to search with limited time
+   for possible improvements in a complex system can be a hard, cumbersome and a maybe impossible task.
 
 3. Should we have chosen a different framework 2 years ago, when we have started implementing this application?
 
@@ -62,45 +62,39 @@ The test setup is now easy enough for a comparison. But we also have to make sur
 assuring that we are really measuring the performance of the service under test. This performance shall not be
 influenced by our test setup:
 
-- If multiple services are deployed, they shall not influence each other
+- The service shall not be influenced by the system it runs on
 
-  This can be verified by repeating certain parts of the test with an isolated deployment and verify that the
-  performance is not changing
-
-- The system or computer that runs the application shall not be overloaded
-
-  The system resources have to be monitored during the performance test
+  If multiple services are deployed in parallel, make sure they are not influencing each other. Repeating certain parts
+  of the test with an isolated deployment shows that this is not the case. A performance test consumes a lot
+  computational power and memory. The system resources have to be monitored during the test to assure the system or
+  computer is not overloaded.
 
 - The service shall not be limited by the performance of the mock service
 
-  For this we will do a little technical adjustment and raise the count of instances of the mocked service to 3. A load
-  test against the mock service setup assures that it is performant enough to not influence the performance of the
-  service under test.
+  Overrating the capabilities is a know pitfall for performance testing. To overcome this we will do a little technical
+  adjustment and raise the count of instances of the mocked service to 3. A load test against the mock service setup
+  assures that it is performant enough to not influence the performance of the service under test.
 
 ![](./assets/DetailedDependenciesForPerformanceTest.png)
-
-We will use Gatling as a load testing client. It will call the service under test with a certain amount of requests per
-second.
 
 The functionality of the service under test consists of a call to a service that shall mock a third party dependency.
 When called, the mock service will wait for 1 second and then respond with a random number.
 
 ![](./assets/SequenceForPerformanceTests.png)
 
-Apart from the described functional endpoint that will be used in the test, each service provides a further endpoint
-that serves service metrics to a Prometheus client.
-
-### Test parameters
-
-All services will be started inside a docker container. The Gatling client will call each service one after another
-starting with 100 users over three minutes. If the rate of successful calls is greater than 90% the test will be
-repeated with user count raised by 100. For further details please
-the [script that executes the load test](https://github.com/fkohl04/framework-performance/blob/main/performancetest/runAllTest.sh)
-and
-the [gatling test](https://github.com/fkohl04/framework-performance/blob/main/performancetest/src/gatling/scala/scenarios/BasicSimulation.scala)
-itself.
+All services will be started inside a docker container. We will use Gatling as a load testing client. It will call the
+service under test with a certain amount of requests per second. Apart from the described functional endpoint that will
+be used in the test, each service provides a further endpoint that serves service metrics to a Prometheus client.
 
 ## Candidates
+
+I did a survey among my valued colleagues to find out which JVM frameworks they have encountered in productive systems.
+To this list I added the JavaScript Runtime Node.js to have a little comparison to the outside of the JVM world.
+
+We made our test setup as simple as possible to have fewer parameters and achieve comparability. We are creating our
+services under exactly the same principle and will only implement the most simple application serving our needs without
+any performance relevant adjustment or improvement. In general, I tried to deduce every service from the GettingStarted
+tutorials of the framework websites to get the impression of the service, the framework creators are presenting.
 
 ### Spring
 
@@ -116,9 +110,11 @@ We will test it with a Netty and with the coroutine based CIO Engine.
 
 ### Vertx
 
-The framework/toolkit [Vertx](https://vertx.io/) is developed by Eclipse and was just released in 2021 .It promises to
-be flexible, resource efficient and enable writing non-blocking code without unnecessary complexity. More toolkit than
-framework.
+[Vertx](https://vertx.io/) is developed by Eclipse and was just released in 2021. It promises to be flexible, resource
+efficient and enable writing non-blocking code without unnecessary complexity. Vertx is described as "a toolkit, not a
+framework", which underlines its flexibility on the one hand, but also indicates it has to be configured to a certain
+degree. Indeed, Vertx was the only service where I had to do a little performance influencing adjustment to make it
+comparable to the other services: Set the number of verticles and set the max connection count of the HttpClient
 
 ### Micronaut
 
@@ -128,39 +124,97 @@ and memory footprint low among under things by avoiding reflection. It was devel
 ### Node
 
 In contrast to all other JVM based frameworks we will also test a [Node.js](https://nodejs.org/en/about/) server which
-is an asynchronous and event driven JavaScript runtime.
+is an asynchronous and event driven JavaScript runtime. The special part is that node is executing the event and network
+handling on a single thread.
 
-## Result
+## Test Execution
+
+We will test our candidates in three disciplines
+
+1. How many requests per second can they process without getting unresponsive?
+2. How do they behave if the third party system gets slower and slower?
+3. What resources are the containers consumers during an average size of load?
+
+### 1. Requests per second
+
+The Gatling client will call each service one after another starting with 100 users over three minutes. If the rate of
+successful calls is greater than 90% the test will be repeated with user count raised by 100 until the service gets
+unresponsive. For further details please
+the [script that executes the load test](https://github.com/fkohl04/framework-performance/blob/main/performancetest/runTillFailure.sh)
+and
+the [gatling test](https://github.com/fkohl04/framework-performance/blob/main/performancetest/src/gatling/scala/scenarios/BasicSimulation.scala)
+itself.
+
+#### Result
+
+| Average response time | 100 | 200 | 300 | 400 |  500 |  600 |  700 |  800 |  900 |  1000 | 1100 |
+|-----------------------|:---:|:---:|:---:|:---:|:----:|:----:|:----:|:----:|:----:|:-----:|:----:|
+| Vertx                 |  1s |  1s |  1s |  1s |  1s  |  1s  |  1s  | 3.1s | 4.1s | 7.46s |   X  |
+| Ktor-Netty            |  1s |  1s |  1s |  1s |  1s  |  1s  | 1.3s | 5.7s |   X  |       |      |
+| Ktor-CIO              |  1s |  1s |  1s |  1s |  1s  | 1.1s |   X  |      |      |       |      |
+| Micronaut             |  1s |  1s |  1s |  1s |  1s  | 1.4s |   X  |      |      |       |      |
+| Node                  |  1s |  1s |  1s |  1s |  2.9 |   X  |      |      |      |       |      |
+| Spring-Reactive       |  1s |  1s |  1s |  1s | 2.1s |   X  |      |      |      |       |      |
+| Spring                |  1s |  1s |  X  |     |      |      |      |      |      |       |      |
 
 ![](./assets/result.png)
 
-### Observations
+#### Observations
 
-1. A service is able to handle a certain user count without visible restrictions if the response time is near to 1s and
-   the request rate is near to the count of requests per second. Before a service becomes unresponsive it can be
-   observed that the response times are raising strongly and the request rate drops.
+1. When a service is able to handle a certain user count the response time is near to the configured delay of the
+   mockservice and the request rate is near to the count of requests per second. Before a service becomes unresponsive
+   it can be observed that the response times are raising strongly and the request rate drops.
 2. For the Spring service the thread count is equal to the requests rate during all successful test runs. For all other
    services the JVM thread count is nearly not changing during the test.
-3. Neu auszählen
+   ![](./assets/threads.png)
 
-### Reasoning
+#### Reasoning
 
-The Spring Service is the only one working with a blocking thread model. Each incoming call is processed by dedicated
-JVM thread. The underlying Tomcat http engine works with a fixed count of 200 threads. With this it is just logical and
-nice to observe in the diagram that it can serve 200 threads / 0.5 seconds of blocking a thread per request = 400
-requests per second. Then why not just raising the count of threads? Of course each thread costs resources and we can
-see that the service is already consuming as many resources as the other services.
+The Spring Service is the only one working with a blocking threading model. Each incoming call is processed by dedicated
+JVM thread. The underlying Tomcat http engine works with a fixed count of 200 threads. With this it is just logical that
+it can serve 200 requests per second. Then why not just raising the count of threads? Of course maintaining thread costs
+resources. More details about this can be observed in the third test.
 
 For all other services it is clearly visible that they are working with a non-blocking threading model since the
-requests rate is much higher than the count of active threads would allow it to be in regard of the sleeping time of the
-slow third party mock.
+requests rate is much higher than the count of active threads would allow it to be. This seems to work a bit better for
+micronaut and ktor than for spring reactive and node
+
+### 3. Resource consumption
+
+Before the test we will restart all containers, so that the resource metrics are not influenced by earlier executions.
+The Gatling client will call each service one after another with a fixed count of users. We are using cadvisor which
+exposes metrics about active containers as prometheus metrics, to compare the resource consumption of the different
+containers.
+
+#### Result
+| Max memory usage |   200   | 400 |   500   |
+|------------------|:-------:|:---:|:-------:|
+| Vertx            | 376 MiB |  1s | 396 MiB |
+| Ktor-Netty       | 405 MiB |  1s | 535 MiB |
+| Ktor-CIO         | 417 MiB |  1s | 532 MiB |
+| Micronaut        | 472 MiB |  1s | 536 MiB |
+| Node             |  93 MiB |  1s | 167 MiB |
+| Spring-Reactive  | 509 MiB |  1s | 566 MiB |
+| Spring           | 596 MiB |  1s | 910 MiB |
+
+| CPU Time        |    200   | 400 |    500   |
+|-----------------|:--------:|:---:|:--------:|
+| Vertx           |  32.6 s  |  1s |    54s   |
+| Ktor-Netty      | 1.22 min |  1s | 2.18 min |
+| Ktor-CIO        | 1.33 min |  1s | 2.37 min |
+| Micronaut       | 1.33 min |  1s | 2.12 min |
+| Node            |  57.3 s  |  1s | 1.39 min |
+| Spring-Reactive | 1.17 min |  1s | 2.18 min |
+| Spring          | 2.02 min |  1s | 2.32 min |
+#### Observations
+#### Reasoning
 
 ## Resume
 
 Many question during the development of software can not be answered generally and are very dependent on the use case.
 Which framework to use and whether to use a non-blocking or a blocking one is surely one of them. But this is also not
-directly the question we wanted to answer: Are there differences between the performance of currently commonly used JVM
-frameworks? This question we can answer with a clear: Yes.
+the question we wanted to investigate in this post: Are there differences between the performance of currently commonly
+used JVM frameworks? This question we can answer with a clear: Yes.
 
 If you are planning to build an application that has to perform a high amount of requests, or that has to deal with very
 slow dependencies the framework choice can make a big difference. Overcoming these challenges could be easier when using
