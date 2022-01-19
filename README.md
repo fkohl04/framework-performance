@@ -199,9 +199,9 @@ by earlier executions. Please note: For this very test we raised the thread coun
 | Vertx            | 376 MiB | 385 MiB |  424 MiB |
 | Ktor-Netty       | 405 MiB | 434 MiB |  510 MiB |
 | Ktor-CIO         | 417 MiB | 604 MiB |  898 MiB |
-| Micronaut        | 472 MiB | 602 MiB |  510 MiB |
+| Micronaut        | 472 MiB | 500 MiB |  510 MiB |
 | Node             |  93 MiB | 113 MiB |  391 MiB |
-| Spring-Reactive  | 509 MiB | 480 MiB |  1.4 GiB |
+| Spring-Reactive  | 600 MiB | 680 MiB |  1.4 GiB |
 | Spring           | 596 MiB | 910 MiB | 1.05 GiB |
 
 | CPU Time        | 200      | 400      | 500      |
@@ -212,7 +212,7 @@ by earlier executions. Please note: For this very test we raised the thread coun
 | Micronaut       | 1.33 min | 1.74 min | 2.53 min |
 | Node            | 57.3 s   | 2.02 min | 2.87 min |
 | Spring-Reactive | 1.17 min | 1.51 min | 3.15 min |
-| Spring          | 2.02 min | 1.82 min | 2.38 min |
+| Spring          | 1.20 min | 1.82 min | 2.38 min |
 
 #### Observations
 
