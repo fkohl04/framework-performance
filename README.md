@@ -126,8 +126,8 @@ and memory footprint low among under things by avoiding reflection. It was devel
 ### Node
 
 In contrast to all other JVM based frameworks we will also test a [Node.js](https://nodejs.org/en/about/) server which
-is an asynchronous and event driven JavaScript runtime. The special part is that node is executing the event and network
-handling on a single thread.
+is an asynchronous and event driven JavaScript runtime. The special part is that node is executing all computations in a 
+single thread.
 
 ## Test Execution
 
@@ -187,36 +187,37 @@ stays responsive up until impressing 1000 req/sec.
 
 ### 3. Resource consumption
 
-The Gatling client will call each service one after another with a certain rate of calls per second. We are using
+The Gatling client will call each service one after another with a certain rate of calls per second over three minutes. We are using
 cadvisor which exposes metrics about active containers as prometheus metrics, to compare the resource consumption of the
 different containers. Before each test we will restart all containers, so that the resource metrics are not influenced
-by earlier executions. Please note: For this very test we raised the thread count of the spring service to 500.
+by earlier executions. Please note: For this very test we raised the thread count of the spring service to 500. All values are means over multiple test runs. 
 
 #### Result
 
-| Max memory usage |   200   |   400   |    500   |
-|------------------|:-------:|:-------:|:--------:|
-| Vertx            | 376 MiB | 385 MiB |  424 MiB |
-| Ktor-Netty       | 405 MiB | 434 MiB |  510 MiB |
-| Ktor-CIO         | 417 MiB | 604 MiB |  898 MiB |
-| Micronaut        | 472 MiB | 500 MiB |  510 MiB |
-| Node             |  93 MiB | 113 MiB |  391 MiB |
-| Spring-Reactive  | 600 MiB | 680 MiB |  1.4 GiB |
-| Spring           | 596 MiB | 910 MiB | 1.05 GiB |
+| Max memory usage | 200 req/sec | 400 req/sec | 500 req/sec |
+|------------------|:-----------:|:-----------:|:-----------:|
+| Vertx            |   376 MiB   |   385 MiB   |   424 MiB   |
+| Ktor-Netty       |   405 MiB   |   434 MiB   |   510 MiB   |
+| Ktor-CIO         |   417 MiB   |   604 MiB   |   898 MiB   |
+| Micronaut        |   472 MiB   |   500 MiB   |   510 MiB   |
+| Node             |    93 MiB   |   113 MiB   |   391 MiB   |
+| Spring-Reactive  |   600 MiB   |   680 MiB   |   1.09 GiB  |
+| Spring           |   596 MiB   |   910 MiB   |   1.05 GiB  |
 
-| CPU Time        | 200      | 400      | 500      |
-|-----------------|----------|----------|----------|
-| Vertx           | 32.6 s   | 43.4 s   | 1.14 min |
-| Ktor-Netty      | 1.22 min | 1.82 min | 2.52 min |
-| Ktor-CIO        | 1.33 min | 2.89 min | 2.72 min |
-| Micronaut       | 1.33 min | 1.74 min | 2.53 min |
-| Node            | 57.3 s   | 2.02 min | 2.87 min |
-| Spring-Reactive | 1.17 min | 1.51 min | 3.15 min |
-| Spring          | 1.20 min | 1.82 min | 2.38 min |
+| CPU Time        | 200 req/sec | 400 req/sec | 500 req/sec |
+|-----------------|:-----------:|:-----------:|:-----------:|
+| Vertx           |    32.6 s   |   43.4 s    |   1.14 min  |
+| Ktor-Netty      |   1.22 min  |   1.82 min  |   2.52 min  |
+| Ktor-CIO        |   1.33 min  |   2.89 min  |   2.72 min  |
+| Micronaut       |   1.33 min  |   1.74 min  |   2.53 min  |
+| Node            |    57.3 s   |   2.02 min  |   2.87 min  |
+| Spring-Reactive |   1.17 min  |   1.51 min  |   2.62 min  |
+| Spring          |   1.20 min  |   1.82 min  |   2.38 min  |
 
 #### Observations
 
-1.
+1. Vertx requires with clear distance the fewest CPU time
+2. The node service requires muss less memory than all the JVM frameworks
 
 #### Reasoning
 
