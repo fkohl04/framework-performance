@@ -126,7 +126,7 @@ and memory footprint low among under things by avoiding reflection. It was devel
 ### Node
 
 In contrast to all other JVM based frameworks we will also test a [Node.js](https://nodejs.org/en/about/) server which
-is an asynchronous and event driven JavaScript runtime. The special part is that node is executing all computations in a 
+is an asynchronous and event driven JavaScript runtime. The special part is that node is executing all computations in a
 single thread.
 
 ## Test Execution
@@ -187,10 +187,11 @@ stays responsive up until impressing 1000 req/sec.
 
 ### 3. Resource consumption
 
-The Gatling client will call each service one after another with a certain rate of calls per second over three minutes. We are using
-cadvisor which exposes metrics about active containers as prometheus metrics, to compare the resource consumption of the
-different containers. Before each test we will restart all containers, so that the resource metrics are not influenced
-by earlier executions. Please note: For this very test we raised the thread count of the spring service to 500. All values are means over multiple test runs. 
+The Gatling client will call each service one after another with a certain rate of calls per second over three minutes.
+We are using cadvisor which exposes metrics about active containers as prometheus metrics, to compare the resource
+consumption of the different containers. Before each test we will restart all containers, so that the resource metrics
+are not influenced by earlier executions. Please note: For this very test we raised the thread count of the spring
+service to 500. All values are means over multiple test runs.
 
 #### Result
 
@@ -201,8 +202,8 @@ by earlier executions. Please note: For this very test we raised the thread coun
 | Ktor-CIO         |   417 MiB   |   604 MiB   |   898 MiB   |
 | Micronaut        |   472 MiB   |   500 MiB   |   510 MiB   |
 | Node             |    93 MiB   |   113 MiB   |   391 MiB   |
-| Spring-Reactive  |   600 MiB   |   680 MiB   |   1.09 GiB  |
-| Spring           |   596 MiB   |   910 MiB   |   1.05 GiB  |
+| Spring-Reactive  |   600 MiB   |   680 MiB   |   1.05 GiB  |
+| Spring           |   596 MiB   |   910 MiB   |   1.09 GiB  |
 
 | CPU Time        | 200 req/sec | 400 req/sec | 500 req/sec |
 |-----------------|:-----------:|:-----------:|:-----------:|
@@ -216,10 +217,23 @@ by earlier executions. Please note: For this very test we raised the thread coun
 
 #### Observations
 
-1. Vertx requires with clear distance the fewest CPU time
-2. The node service requires muss less memory than all the JVM frameworks
+1. The Vertx services requires with clear distance the fewest CPU. All other services require about the same.
+2. The node service requires muss less memory than all the JVM frameworks. Spring, Spring-reactive and Ktor-CIO have a
+   noticeably higher memory consumption than the others.
 
 #### Reasoning
+
+Since the Java Runtime Environment is bigger than the Node Runtime it is directly clear why the JVM containers require
+more memory than the Node container. Obviously the Spring Service allocates more memory than the other frameworks for
+each load scenario. A reason for this could be that the spring service creates one thread per open request, while the
+non-blocking frameworks are in general persisting a form of an event per request.
+
+Note: We have to be careful when comparing memory consumption of JVM services, because the JVM pre-allocates memory it
+does not actually use. Though the result is in the end the effect is the same: The container allocated memory that has
+to be available.
+
+The CPU computation advantage of Vertx can only be attributed to efficient processing of the requests, since in general
+all services had to process the same tasks.
 
 ## Resume
 
@@ -230,17 +244,19 @@ Are there differences between the performance of currently commonly used (JVM) f
 with a clear: Yes.
 
 Especially when you have strict requirements like
+
 - a high request load
 - slow third party dependencies
 - limited resources
 
-the choice of a framework can make a big difference. A non-blocking framework is not the one simply solution for all 
+the choice of a framework can make a big difference. A non-blocking framework is not the one simply solution for all
 these challenges, but surely some of them are easier to overcome when choosing one.
 
 An often read counterargument against reactive programming and non-blocking frameworks is, that the code becomes hard to
 read, to maintain and to understand. And this may be true, when one tries to write
 [stream-like instructions](spring-webflux/src/main/kotlin/spring/demo/demo/controller/Controller.kt) for the publisher
-schema of Spring-Reactive. At that point I want to emphasize an in my opinion big advantage of Kotlin and its coroutines:
+schema of Spring-Reactive. At that point I want to emphasize an in my opinion big advantage of Kotlin and its
+coroutines:
 the asynchronous/non-blocking code
 looks [nearly like synchronous/blocking code](https://kotlinlang.org/docs/async-programming.html#coroutines). You don't
 have to learn or get used to completely new patterns, but can just write code that is easy to read and has the potential
