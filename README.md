@@ -161,21 +161,19 @@ itself.
 
 ![](./assets/result.png)
 
-#### Observations
+#### Observations & Conclusions
 
-1. When a service is able to handle a certain user count the response time is near to the configured delay of the
-   mockservice and the request rate is near to the count of requests per second. Before a service becomes unresponsive
-   it can be observed that the response times are raising strongly and the request rate drops.
-2. For the Spring service the thread count is equal to the requests rate during all successful test runs. For all other
-   services the JVM thread count is nearly not changing during the test.
-   ![](./assets/threads.png)
-
-#### Reasoning
+When a service is able to handle a certain user count the response time is near to the configured delay of the
+mockservice and the request rate is near to the count of requests per second. Before a service becomes unresponsive it
+can be observed that the response times are raising strongly and the request rate drops.
 
 The Spring Service is the only one working with a blocking threading model. Each incoming call is processed by a
-dedicated JVM thread. The underlying Tomcat http engine works with a fixed count of 200 threads. With this it is just
-logical that it can serve 200 requests per second. Then why not just raising the count of threads? Of course maintaining
-threads costs resources. More details about this can be observed in the third test.
+dedicated JVM thread, which can be observed nicely in the Grafana dashboard. ![](./assets/threads.png)
+The underlying Tomcat http engine works with a fixed count of 200 threads. With this given, it is logical that it can
+serve 200 requests per second. Why not simply raising the count of threads? On the one hand, we want to compare the
+frameworks without any performance relevant adjustments. On the other hand, raising the thread count is also in general
+not the perfect solution for performance problems, because maintaining threads costs resources. More details about this
+will come in the third test.
 
 For all other services it is clearly visible that they are working with a non-blocking threading model since the
 requests rate is much higher than the count of active threads would allow it to be. This seems to work a bit better for
@@ -184,6 +182,25 @@ as fast as the mocked service. With higher request counts the response times of 
 stays responsive up until impressing 1000 req/sec.
 
 ### 2. Very slow third party clients
+
+For this test we will adjust our mock services to have a larger delay that in the other tests. Starting at 1 seconds and
+up to 8 seconds. For each duration the Gatling client will call the services for three minutes with 100 req / sec. In
+contrast to the first test, where the challenge was to accept and handle as many requests as possible, this task is
+about handling the piling up of tasks, since each second more tasks are sent than finished.
+
+#### Result
+
+| Average response time | 1s | 2s | 4s | 6s | 8s | |-----------------------|:--:|:--:|:--:|:---:|:--:| | Vertx | 1s | 2s
+| 4s | 6s | 8s | | Ktor-Netty | 1s | 2s | 4s | 6s | 8s | | Ktor-CIO | 1s | 2s | 4s | 6s | 8s | | Micronaut | 1s | 2s |
+4s | 6s | 8s | | Node | 1s | 2s | 4s | 6s | 8s | | Spring-Reactive | 1s | 2s | 4s | 15s | X | | Spring | 1s | 2s | X | |
+|
+
+#### Observations & Conclusions
+
+Spring just logical 200 Threads / 2 sec Wartezeit pro Task * 1 Task pro thread = 200 req / sec
+
+Bis auf spring reactive zeigen die anderen keine Reaktion. Irgendwann würde der Speicher vollaufen, aber es ist sicher
+unrealistisch, dass eine dependency länger als 8 sekunden benötigt.
 
 ### 3. Resource consumption
 
@@ -195,16 +212,6 @@ service to 500. All values are means over multiple test runs.
 
 #### Result
 
-| Max memory usage | 200 req/sec | 400 req/sec | 500 req/sec |
-|------------------|:-----------:|:-----------:|:-----------:|
-| Vertx            |   376 MiB   |   385 MiB   |   424 MiB   |
-| Ktor-Netty       |   405 MiB   |   434 MiB   |   510 MiB   |
-| Ktor-CIO         |   417 MiB   |   604 MiB   |   898 MiB   |
-| Micronaut        |   472 MiB   |   500 MiB   |   510 MiB   |
-| Node             |    93 MiB   |   113 MiB   |   391 MiB   |
-| Spring-Reactive  |   600 MiB   |   680 MiB   |   1.05 GiB  |
-| Spring           |   596 MiB   |   910 MiB   |   1.09 GiB  |
-
 | CPU Time        | 200 req/sec | 400 req/sec | 500 req/sec |
 |-----------------|:-----------:|:-----------:|:-----------:|
 | Vertx           |    32.6 s   |   43.4 s    |   1.14 min  |
@@ -215,25 +222,33 @@ service to 500. All values are means over multiple test runs.
 | Spring-Reactive |   1.17 min  |   1.51 min  |   2.62 min  |
 | Spring          |   1.20 min  |   1.82 min  |   2.38 min  |
 
-#### Observations
+| Max memory usage | 200 req/sec | 400 req/sec | 500 req/sec |
+|------------------|:-----------:|:-----------:|:-----------:|
+| Vertx            |   376 MiB   |   385 MiB   |   424 MiB   |
+| Ktor-Netty       |   405 MiB   |   434 MiB   |   510 MiB   |
+| Ktor-CIO         |   417 MiB   |   604 MiB   |   898 MiB   |
+| Micronaut        |   472 MiB   |   500 MiB   |   510 MiB   |
+| Node             |    93 MiB   |   113 MiB   |   391 MiB   |
+| Spring-Reactive  |   600 MiB   |   680 MiB   |   1.05 GiB  |
+| Spring           |   596 MiB   |   910 MiB   |   1.09 GiB  |
 
-1. The Vertx services requires with clear distance the fewest CPU. All other services require about the same.
-2. The node service requires muss less memory than all the JVM frameworks. Spring, Spring-reactive and Ktor-CIO have a
-   noticeably higher memory consumption than the others.
+#### Observations & Conclusions
 
-#### Reasoning
+The Vertx services requires the fewest CPU computation time, while all other services require about the same. The CPU
+computation advantage of Vertx can only be attributed to efficient processing of the requests, since in general all
+services had to process the same logic.
 
-Since the Java Runtime Environment is bigger than the Node Runtime it is directly clear why the JVM containers require
-more memory than the Node container. Obviously the Spring Service allocates more memory than the other frameworks for
-each load scenario. A reason for this could be that the spring service creates one thread per open request, while the
-non-blocking frameworks are in general persisting a form of an event per request.
+Especially for lower request rates the node service requires muss less memory than all the JVM frameworks. That is not
+surprising since the Java Runtime Environment is bigger than the Node Runtime. Depending on the scenario, this could be
+a big advantage. For example with the same memory one could simply host more instances of node container that of JVM
+containers.
 
 Note: We have to be careful when comparing memory consumption of JVM services, because the JVM pre-allocates memory it
 does not actually use. Though the result is in the end the effect is the same: The container allocated memory that has
 to be available.
 
-The CPU computation advantage of Vertx can only be attributed to efficient processing of the requests, since in general
-all services had to process the same tasks.
+For each request count spring-reactive and especially spring consume more memory that all other frameworks. At 500 req /
+sec each consumes nearly double the amount of the other frameworks with KTOR-CIO being an exception.
 
 ## Resume
 
