@@ -107,16 +107,30 @@ It is available in a blocking servlet stack and a non-blocking reactive stack. W
 
 [KTOR](https://ktor.io/) is a framework for asynchronous client and server applications that promises to be lightweight,
 flexible, simple and fun. Release of first version in 2018 by Jetbrains. Written completely in Kotlin and built up on
-its coroutines. Ktor offers the possibility to [choose the underlying http engine](https://ktor.io/docs/engines.html).
-We will test it with a Netty and with the coroutine based CIO Engine.
+its coroutines. Coroutines are [conceptually similar to threads](https://kotlinlang.org/docs/coroutines-basics.html),
+but much more lightweight. Ktor offers the possibility
+to [choose the underlying http engine](https://ktor.io/docs/engines.html). We will test it with a Netty and with the
+coroutine based CIO Engine.
+
+### Node
+
+In contrast to all other JVM based frameworks we will also test a [Node.js](https://nodejs.org/en/about/) server which
+is an asynchronous and event driven JavaScript runtime. Node implements
+the [Reactor pattern](https://en.wikipedia.org/wiki/Reactor_pattern), which means that it uses an "event loop" to
+achieve its asynchronous behavior. The special part is that node is executing all computations in a single thread.
+Though, there is a pool of worker threads that handle time-consuming I/O tasks. See [here](https://nodejs.org/en/about/)
+for more details.
 
 ### Vertx
 
 [Vertx](https://vertx.io/) is developed by Eclipse and was just released in 2021. It promises to be flexible, resource
-efficient and enable writing non-blocking code without unnecessary complexity. Vertx is described as "a toolkit, not a
-framework", which underlines its flexibility on the one hand, but also indicates it has to be configured to a certain
-degree. Indeed, Vertx was the only service where I had to do a little performance influencing adjustment to make it
-comparable to the other services: Set the number of verticles and set the max connection count of the HttpClient.
+efficient and enable writing non-blocking code without unnecessary complexity. Like Node or Spring Reactive Vertx
+implements the Reactor pattern with an interesting addition: Instead of a single event loop, vertx uses multiple and
+call this ["Multi-Reactor"](https://vertx.io/docs/vertx-core/java/#_reactor_and_multi_reactor). Vertx is described as "a
+toolkit, not a framework", which underlines its flexibility on the one hand, but also indicates it has to be configured
+to a certain degree. Indeed, Vertx was the only service where I had to do a little performance influencing adjustment to
+make it comparable to the other services: Set the number of verticles and set the max connection count of the
+HttpClient.
 
 ### Micronaut
 
@@ -126,12 +140,13 @@ the Micronaut Foundation. Their blog also contains
 an [entry](https://micronaut.io/2020/04/28/practical-performance-comparison-of-spring-boot-micronaut-1-3-micronaut-2-0/)
 about a performance comparison of micronaut vs. SpringBoot.
 
-### Node
-
-In contrast to all other JVM based frameworks we will also test a [Node.js](https://nodejs.org/en/about/) server which
-is an asynchronous and event driven JavaScript runtime. The special part is that node is executing all computations in a
-single thread. Though there is a pool of worker threads that handle time consuming I/O tasks.
-See [here](https://nodejs.org/en/about/) for more details.
+Micronaut offers
+great [support and instructions](https://guides.micronaut.io/latest/micronaut-creating-first-graal-app.html) on
+generating native images. Though, we won't use native images in this comparison, since it would also be possible to
+generate those for the other frameworks. This is a topic for a different blog entry :) (
+like [this about the theory of native images](https://blog.senacor.com/graalvm-native-images-in-der-theorie/) or this
+about [how to build native images in a CI Pipeline](https://blog.senacor.com/graalvm-native-images-fur-deine-ci-pipeline/))
+.
 
 ## Test Execution
 
@@ -325,6 +340,8 @@ looks [nearly like synchronous/blocking code](https://kotlinlang.org/docs/async-
 have to learn or get used to completely new patterns, but can just write code that is easy to read and has the potential
 to deliver a high performant result by being asynchronous. As written above, Ktor is written completely in Kotlin and
 built upon coroutines. But also all the other presented frameworks have a support for Kotlin + coroutines.
+[Here is a great article](https://medium.com/androiddevelopers/the-suspend-modifier-under-the-hood-b7ce46af624f), if you
+want to understand how coroutines are working "under the hood".
 
 ## How to execute the test ( Not part of blog entry)
 
