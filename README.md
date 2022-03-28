@@ -1,19 +1,20 @@
-# framework-performance
+# framework-performance (TODO Wir brauchen noch einen Titel für den Artikel)
 
 This repository serves as base for a blog entry. If you want to retrace the explained testing result
 see [this chapter.](#how-to-execute-the-test--not-part-of-blog-entry)
 
 ## Motivation
 
-During the development of distributed applications their performance is always a crucial part. Every application is
+During the development of distributed applications, their performance is always a crucial part. Every application is
 developed to serve a certain purpose which in most cases consists of processing tasks. These tasks can be of various
 types, like processing data or serving network requests. In all cases we can regard the performance of an application as
-the amount of workload it can handle in a given time interval depending on the consumed or needed resources.
+the amount of workload it can handle in a given time interval depending on the consumed or needed resources. 
+(TODO letzter Satz ist eher eine Definition. Macht die hier so Sinn?)
 
-What to do when an application does not deliver the required performance? What if an application was developed to
-process a certain amount of tasks each second, but it simply does not. Or the response time of our application becomes
-under certain load so high that it results in bad user experience. If you have encountered such a situation before, some
-of you may have discussed the following questions:
+But what to do when an application does not deliver the required performance? What if an application was developed to
+process a certain amount of tasks each second, but it simply does not? Or what if the response time of our application
+under certain load grows so high that it results in bad user experience or even request timeouts? If you have encountered 
+such a situation before, some of you may have discussed the following questions:
 
 1. Can we deploy more instances of our application?
 
@@ -34,12 +35,12 @@ of you may have discussed the following questions:
 
    Maybe!
 
-In this article, we want to investigate and concentrate on the third question. How relevant is the choice of a framework
+In this article, I want to focus on the third question. How relevant is the choice of a framework
 when trying to achieve a certain performance? How big are the differences between currently commonly used frameworks?
 
 ## Test setup
 
-### System
+The overall setup of this test can be found [here](https://github.com/fkohl04/framework-performance).
 
 Let's think about a possible setup which we can use to compare the performance of different frameworks.
 
@@ -52,13 +53,13 @@ when measuring the performance of a deployed application we are also measuring a
 
 Trying to compare the performance of frameworks in such a system would be very hard, because there are simply too many
 parameters. In order to eliminate any side effect and achieve comparability, we will reduce the test setup to the
-smallest possible constellation that still represents the built-in networking capabilities, used threading models and
-load handling capabilities of the tested frameworks. For this we will reduce the count of dependencies to a single
+smallest possible setup that still represents the built-in networking capabilities, used threading models and
+load handling capabilities of the tested frameworks. For this, we will reduce the amount of dependencies to a single
 external dependency.
 
 ![](./assets/DependenciesForPerformanceTest.png)
 
-The test setup is now easy enough for a comparison. But we also have to make sure that the test is meaningful by
+The test setup is now simple enough for a comparison. But we also have to make sure that the test is meaningful by
 assuring that we are really measuring the performance of the service under test. This performance shall not be
 influenced by our test setup:
 
@@ -71,14 +72,14 @@ influenced by our test setup:
 
 - The service shall not be limited by the performance of the mock service
 
-  Overrating the capabilities of mock services is a known pitfall for performance testing. To overcome this we will do a
+  Overrating the capabilities of mock services is a known pitfall for performance testing(hier ggf. noch ein Link). To overcome this we will do a
   little technical adjustment and raise the count of instances of the mocked service to 3. A load test against the mock
   service setup assures that it is performant enough to not influence the performance of the service under test.
 
 ![](./assets/DetailedDependenciesForPerformanceTest.png)
 
 The functionality of the service under test consists of a call to the mocked third party dependency. When called, the
-mock service will wait for 1 second and then respond with a random number. The service under test will forward this
+mock service will wait for one second and then respond with a random number. The service under test will forward this
 answer.
 
 ![](./assets/SequenceForPerformanceTests.png)
@@ -88,8 +89,9 @@ service under test with a certain amount of requests per second. Apart from the 
 be used in the test, each service provides a further endpoint that serves service metrics to a Prometheus client.
 
 ## Candidates
+(TODO Hier noch ein Satz, warum du dich auf JVM fokussierst?)
 
-I did a survey among my valued colleagues to find out which JVM frameworks they have encountered in productive systems.
+I did a survey among my valued colleagues at Senacor to find out, which JVM frameworks they have encountered in productive systems.
 To this list I added the JavaScript Runtime Node.js to have a little comparison to the outside of the JVM world.
 
 We made our test setup as simple as possible to have fewer parameters and achieve comparability. We are creating our
@@ -112,23 +114,23 @@ but much more lightweight. Ktor offers the possibility
 to [choose the underlying http engine](https://ktor.io/docs/engines.html). We will test it with a Netty and with the
 coroutine based CIO Engine.
 
-### Node
+### Node (TODO ggf. nach unten schieben, dass du alle JVM Frameworks beisammen hast?)
 
 In contrast to all other JVM based frameworks we will also test a [Node.js](https://nodejs.org/en/about/) server which
 is an asynchronous and event driven JavaScript runtime. Node implements
 the [Reactor pattern](https://en.wikipedia.org/wiki/Reactor_pattern), which means that it uses an "event loop" to
 achieve its asynchronous behavior. The special part is that node is executing all computations in a single thread.
-Though, there is a pool of worker threads that handle time-consuming I/O tasks. See [here](https://nodejs.org/en/about/)
+However, there is a pool of worker threads that handle time-consuming I/O tasks. See [here](https://nodejs.org/en/about/)
 for more details.
 
-### Vertx
+### Vert.x
 
-[Vertx](https://vertx.io/) is developed by Eclipse and was just released in 2021. It promises to be flexible, resource
-efficient and enable writing non-blocking code without unnecessary complexity. Like Node or Spring Reactive Vertx
-implements the Reactor pattern with an interesting addition: Instead of a single event loop, vertx uses multiple and
-call this ["Multi-Reactor"](https://vertx.io/docs/vertx-core/java/#_reactor_and_multi_reactor). Vertx is described as "a
+[Vert.x](https://vertx.io/) is developed by Eclipse and was just released in 2021 (TODO stimmt nicht. Vert.x gibt es seit 2011, aber das letzte Stable Release kommt von 2021). It promises to be flexible, resource
+efficient and enable writing non-blocking code without unnecessary complexity. Like Node or Spring Reactive, Vert.x
+implements the Reactor pattern with an interesting addition: Instead of a single event loop, Vert.x uses multiple and
+call this ["Multi-Reactor"](https://vertx.io/docs/vertx-core/java/#_reactor_and_multi_reactor). Vert.x is described as "a
 toolkit, not a framework", which underlines its flexibility on the one hand, but also indicates it has to be configured
-to a certain degree. Indeed, Vertx was the only service where I had to do a little performance influencing adjustment to
+to a certain degree. Indeed, Vert.x was the only service where I had to do a little performance influencing adjustment to
 make it comparable to the other services: Set the number of verticles and set the max connection count of the
 HttpClient.
 
@@ -138,7 +140,7 @@ HttpClient.
 and memory footprint low among under methods by avoiding reflection and "ahead of time compilation". It was developed by
 the Micronaut Foundation. Their blog also contains
 an [entry](https://micronaut.io/2020/04/28/practical-performance-comparison-of-spring-boot-micronaut-1-3-micronaut-2-0/)
-about a performance comparison of micronaut vs. SpringBoot.
+about a performance comparison of Micronaut vs. SpringBoot.
 
 Micronaut offers
 great [support and instructions](https://guides.micronaut.io/latest/micronaut-creating-first-graal-app.html) on
@@ -148,7 +150,7 @@ like [this about the theory of native images](https://blog.senacor.com/graalvm-n
 about [how to build native images in a CI Pipeline](https://blog.senacor.com/graalvm-native-images-fur-deine-ci-pipeline/))
 .
 
-## Test Execution
+## Test Execution and Results
 
 We will test our candidates in three disciplines
 
@@ -162,7 +164,7 @@ When serving requests that originate from human interactions there will always b
 depending on the daytime. For example, if you are processing transaction data, you will probably have a peak in your
 requests rates during lunchtime. How good are our frameworks at withstanding such peaks in the requests rate?
 
-The Gatling client will call each service one after another starting with 100 users over three minutes. If the rate of
+The Gatling client calls each service one after another starting with 100 users over three minutes. If the rate of
 successful calls is greater than 90% the test will be repeated with user count raised by 100 until the service gets
 unresponsive. For further details please
 the [script that executes the load test](https://github.com/fkohl04/framework-performance/blob/main/performancetest/runTillFailure.sh)
