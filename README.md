@@ -1,14 +1,17 @@
-# Performance comparison of frameworks for backend services when confronted with slow third party systems
+# Comparing the performance of frameworks for JVM backend services
 
 This repository serves as base for a blog entry. If you want to retrace the explained testing result
 see [this chapter.](#how-to-execute-the-test--not-part-of-blog-entry)
 
 ## Motivation
 
-During the development of distributed applications, their performance is always a crucial part. Every application is
-developed to serve a certain purpose which in most cases consists of processing tasks. These tasks can be of various
-types, like processing data or serving network requests. In all cases we can regard the performance of an application as
-the amount of workload it can handle in a given time interval depending on the consumed or needed resources.
+What is the performance of a backend service? Every application is developed to serve a certain purpose which in most
+cases consists of processing tasks. These tasks can be of various types, like processing data or serving network
+requests. Based on that we can define the performance of an application as the amount of workload it can handle in a
+given time interval depending on the consumed or needed resources.
+
+During the development of distributed applications, their performance is always a crucial part. Because if an
+application is not performing as intended, it is also not fulfilling the purpose it was developed for.
 
 But what to do when an application does not deliver the required performance? What if an application was developed to
 process a certain amount of tasks each second, but it simply does not? Or what if the response time of our application
@@ -289,7 +292,7 @@ The Vertx services requires the fewest CPU computation time, while all other ser
 computation advantage of Vertx can only be attributed to efficient processing of the requests, since in general all
 services had to process the same logic.
 
-Especially for lower request rates, the node service requires use less memory than all the JVM frameworks. That is not
+Especially for lower request rates, the node service requires less memory than all the JVM frameworks. That is not
 surprising since the Java Runtime Environment is bigger than the Node Runtime. Depending on the scenario, this could be
 a big advantage. For example, with the same memory one could host more instances of node containers than of JVM
 containers.
@@ -332,7 +335,8 @@ very fast.
 If you are used to the Spring world and want to stick to it, but also want to use some benefits of asynchronous
 programming, Spring Reactive is definitely worth a try. Especially because you can simply reuse certain Spring modules,
 like SpringSecurity, that you may already have implemented for the blocking Spring stack, an own trial and comparison
-can be quickly achieved.
+can be quickly achieved. How to avoid the complex syntax for asynchronous code that comes with Spring Reactive by using
+Kotlin Coroutines is described in [the next chapter](#one-last-word-about-asynchronous-frameworks-and-programming).
 
 In case you really need a high performant JVM solution, Spring Reactive may not be enough. In that case you should take
 a look at Vertx, which performed excellent in our tests. As said before: Be aware, that Vertx is described as a toolkit,
