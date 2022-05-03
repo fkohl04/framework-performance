@@ -1,4 +1,4 @@
-# Comparing the performance of frameworks for JVM backend services
+# Comparing the Performance of Frameworks for JVM Backend Services
 
 This repository serves as base for a blog entry. If you want to retrace the explained testing result
 see [this chapter.](#how-to-execute-the-test--not-part-of-blog-entry)
