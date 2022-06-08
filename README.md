@@ -1,19 +1,22 @@
-# framework-performance
+# Comparing the Performance of Frameworks for JVM Backend Services
 
 This repository serves as base for a blog entry. If you want to retrace the explained testing result
 see [this chapter.](#how-to-execute-the-test--not-part-of-blog-entry)
 
 ## Motivation
 
-During the development of distributed applications their performance is always a crucial part. Every application is
-developed to serve a certain purpose which in most cases consists of processing tasks. These tasks can be of various
-types, like processing data or serving network requests. In all cases we can regard the performance of an application as
-the amount of workload it can handle in a given time interval depending on the consumed or needed resources.
+What is the performance of a backend service? Every application is developed to serve a certain purpose which in most
+cases consists of processing tasks. These tasks can be of various types, like processing data or serving network
+requests. Based on that we can define the performance of an application as the amount of workload it can handle in a
+given time interval depending on the consumed or needed resources.
 
-What to do when an application does not deliver the required performance? What if an application was developed to
-process a certain amount of tasks each second, but it simply does not. Or the response time of our application becomes
-under certain load so high that it results in bad user experience. If you have encountered such a situation before, some
-of you may have discussed the following questions:
+During the development of distributed applications, their performance is always a crucial part. Because if an
+application is not performing as intended, it is also not fulfilling the purpose it was developed for.
+
+But what to do when an application does not deliver the required performance? What if an application was developed to
+process a certain amount of tasks each second, but it simply does not? Or what if the response time of our application
+under certain load grows so high that it results in bad user experience or even request timeouts? If you have
+encountered such a situation before, some of you may have discussed the following questions:
 
 1. Can we deploy more instances of our application?
 
@@ -34,12 +37,12 @@ of you may have discussed the following questions:
 
    Maybe!
 
-In this article, we want to investigate and concentrate on the third question. How relevant is the choice of a framework
-when trying to achieve a certain performance? How big are the differences between currently commonly used frameworks?
+In this article, I want to focus on the third question. How relevant is the choice of a framework when trying to achieve
+a certain performance? How big are the differences between currently commonly used frameworks?
 
 ## Test setup
 
-### System
+The overall setup of this test can be found [here](https://github.com/fkohl04/framework-performance).
 
 Let's think about a possible setup which we can use to compare the performance of different frameworks.
 
@@ -52,13 +55,13 @@ when measuring the performance of a deployed application we are also measuring a
 
 Trying to compare the performance of frameworks in such a system would be very hard, because there are simply too many
 parameters. In order to eliminate any side effect and achieve comparability, we will reduce the test setup to the
-smallest possible constellation that still represents the built-in networking capabilities, used threading models and
-load handling capabilities of the tested frameworks. For this we will reduce the count of dependencies to a single
-external dependency.
+smallest possible setup that still represents the built-in networking capabilities, used threading models and load
+handling capabilities of the tested frameworks. For this, we will reduce the amount of dependencies to a single external
+dependency.
 
 ![](./assets/DependenciesForPerformanceTest.png)
 
-The test setup is now easy enough for a comparison. But we also have to make sure that the test is meaningful by
+The test setup is now simple enough for a comparison. But we also have to make sure that the test is meaningful by
 assuring that we are really measuring the performance of the service under test. This performance shall not be
 influenced by our test setup:
 
@@ -71,14 +74,16 @@ influenced by our test setup:
 
 - The service shall not be limited by the performance of the mock service
 
-  Overrating the capabilities of mock services is a known pitfall for performance testing. To overcome this we will do a
-  little technical adjustment and raise the count of instances of the mocked service to 3. A load test against the mock
-  service setup assures that it is performant enough to not influence the performance of the service under test.
+  Overrating the capabilities of mock services is
+  a [known pitfall](https://thatdevopsguy.medium.com/high-performance-mocking-for-load-testing-bd6d69610cc9) for
+  performance testing. To overcome this we will do a little technical adjustment and raise the count of instances of the
+  mocked service to 3. A load test against the mock service setup assures that it is performant enough to not influence
+  the performance of the service under test.
 
 ![](./assets/DetailedDependenciesForPerformanceTest.png)
 
 The functionality of the service under test consists of a call to the mocked third party dependency. When called, the
-mock service will wait for 1 second and then respond with a random number. The service under test will forward this
+mock service will wait for one second and then respond with a random number. The service under test will forward this
 answer.
 
 ![](./assets/SequenceForPerformanceTests.png)
@@ -89,8 +94,10 @@ be used in the test, each service provides a further endpoint that serves servic
 
 ## Candidates
 
-I did a survey among my valued colleagues to find out which JVM frameworks they have encountered in productive systems.
-To this list I added the JavaScript Runtime Node.js to have a little comparison to the outside of the JVM world.
+I did a survey among my valued colleagues at Senacor to find out, which JVM frameworks they have encountered in
+productive systems. To this list I added the JavaScript Runtime Node.js to have a little comparison to the outside of
+the JVM world. The focus lies on JVM frameworks, due to the simple fact that I myself mainly worked in projects that
+used JVM backend services.
 
 We made our test setup as simple as possible to have fewer parameters and achieve comparability. We are creating our
 services under exactly the same principle and will only implement the most simple application serving our needs without
@@ -112,25 +119,16 @@ but much more lightweight. Ktor offers the possibility
 to [choose the underlying http engine](https://ktor.io/docs/engines.html). We will test it with a Netty and with the
 coroutine based CIO Engine.
 
-### Node
+### Vert.x
 
-In contrast to all other JVM based frameworks we will also test a [Node.js](https://nodejs.org/en/about/) server which
-is an asynchronous and event driven JavaScript runtime. Node implements
-the [Reactor pattern](https://en.wikipedia.org/wiki/Reactor_pattern), which means that it uses an "event loop" to
-achieve its asynchronous behavior. The special part is that node is executing all computations in a single thread.
-Though, there is a pool of worker threads that handle time-consuming I/O tasks. See [here](https://nodejs.org/en/about/)
-for more details.
-
-### Vertx
-
-[Vertx](https://vertx.io/) is developed by Eclipse and was just released in 2021. It promises to be flexible, resource
-efficient and enable writing non-blocking code without unnecessary complexity. Like Node or Spring Reactive Vertx
-implements the Reactor pattern with an interesting addition: Instead of a single event loop, vertx uses multiple and
-call this ["Multi-Reactor"](https://vertx.io/docs/vertx-core/java/#_reactor_and_multi_reactor). Vertx is described as "a
-toolkit, not a framework", which underlines its flexibility on the one hand, but also indicates it has to be configured
-to a certain degree. Indeed, Vertx was the only service where I had to do a little performance influencing adjustment to
-make it comparable to the other services: Set the number of verticles and set the max connection count of the
-HttpClient.
+[Vert.x](https://vertx.io/) is developed by Eclipse and was published in 2011. It promises to be flexible, resource
+efficient and enable writing non-blocking code without unnecessary complexity. Like Node or Spring Reactive, Vert.x
+implements the Reactor pattern with an interesting addition: Instead of a single event loop, Vert.x uses multiple and
+call this ["Multi-Reactor"](https://vertx.io/docs/vertx-core/java/#_reactor_and_multi_reactor). Vert.x is described as "
+a toolkit, not a framework", which underlines its flexibility on the one hand, but also indicates it has to be
+configured to a certain degree. Indeed, Vert.x was the only service where I had to do a little performance influencing
+adjustment to make it comparable to the other services: Set the number of verticles and set the max connection count of
+the HttpClient.
 
 ### Micronaut
 
@@ -138,7 +136,7 @@ HttpClient.
 and memory footprint low among under methods by avoiding reflection and "ahead of time compilation". It was developed by
 the Micronaut Foundation. Their blog also contains
 an [entry](https://micronaut.io/2020/04/28/practical-performance-comparison-of-spring-boot-micronaut-1-3-micronaut-2-0/)
-about a performance comparison of micronaut vs. SpringBoot.
+about a performance comparison of Micronaut vs. SpringBoot.
 
 Micronaut offers
 great [support and instructions](https://guides.micronaut.io/latest/micronaut-creating-first-graal-app.html) on
@@ -148,7 +146,17 @@ like [this about the theory of native images](https://blog.senacor.com/graalvm-n
 about [how to build native images in a CI Pipeline](https://blog.senacor.com/graalvm-native-images-fur-deine-ci-pipeline/))
 .
 
-## Test Execution
+### Node
+
+In contrast to all other JVM based frameworks we will also test a [Node.js](https://nodejs.org/en/about/) server which
+is an asynchronous and event driven JavaScript runtime. Node implements
+the [Reactor pattern](https://en.wikipedia.org/wiki/Reactor_pattern), which means that it uses an "event loop" to
+achieve its asynchronous behavior. The special part is that node is executing all computations in a single thread.
+However, there is a pool of worker threads that handle time-consuming I/O tasks.
+See [here](https://nodejs.org/en/about/)
+for more details.
+
+## Test Execution and Results
 
 We will test our candidates in three disciplines
 
@@ -158,20 +166,20 @@ We will test our candidates in three disciplines
 
 ### 1. Requests per second
 
-When serving requests that originate from human interactions there will always be fluctuations in the request rate
+When serving requests that originate from human interactions, there will always be fluctuation in the request rate
 depending on the daytime. For example, if you are processing transaction data, you will probably have a peak in your
 requests rates during lunchtime. How good are our frameworks at withstanding such peaks in the requests rate?
 
-The Gatling client will call each service one after another starting with 100 users over three minutes. If the rate of
-successful calls is greater than 90% the test will be repeated with user count raised by 100 until the service gets
-unresponsive. For further details please
+To test this behavior, the Gatling client calls each service one after another starting with 100 users over three
+minutes. If the rate of successful calls is greater than 90% the test will be repeated with user count raised by 100
+until the service gets unresponsive. For further details please
 the [script that executes the load test](https://github.com/fkohl04/framework-performance/blob/main/performancetest/runTillFailure.sh)
 and
 the [gatling test](https://github.com/fkohl04/framework-performance/blob/main/performancetest/src/gatling/scala/scenarios/BasicSimulation.scala)
 itself.
 
-The focus of this test are the networking capabilities of the frameworks. How many requests can the frameworks accept
-per second?
+The focus of this test are the capabilities of the frameworks to handle and process incoming requests in parallel. How
+many requests can the frameworks accept per second?
 
 #### Result
 
@@ -189,33 +197,36 @@ per second?
 
 #### Observations & Conclusions
 
-When a service is able to handle a certain user count the response time is near to the configured delay of the
-mockservice. Before a service becomes unresponsive it can be observed that the response times are raising strongly and
-the request rate drops.
+When a service is able to handle a certain user count, the response time is near to the configured delay of the
+mockservice (i.e. one second). Before a service becomes unresponsive it can be observed that the response times are
+increasing drastically and the request rate drops.
 
-The Spring Service is the only one working with a blocking threading model. Each incoming call is processed by a
-dedicated JVM thread, which can nicely be observed in the Grafana dashboard. ![](./assets/threads.png)
+**The Spring Service** is the only one working with a blocking threading model. Each incoming call is processed by a
+dedicated JVM thread, which can nicely be observed in the Grafana dashboard.
+
+![](./assets/threads.png)
+
 The underlying Tomcat http engine works with a fixed count of 200 threads. With this given, it is logical that it can
 serve 200 requests per second. So why not simply raising the count of threads? On the one hand, we want to compare the
 frameworks without any performance relevant adjustments. When working with such a service you have to decide before
 deployment what the maximal thread count shall be. The service is not scaling automatically when the request count gets
 higher than initially expected. On the other hand, raising the thread count is also in general not the perfect solution
-for performance problems, because maintaining threads always costs resources. More details about this will come in the
-third test.
+for performance problems, because maintaining threads always costs resources. More details about this will be provided
+in the third test.
 
-For all other services it is clearly visible that they are working with a non-blocking threading model since the
+For **all other services** it is clearly visible that they are working with a non-blocking threading model since the
 requests rate is much higher than the count of active threads would allow it to be. This seems to work a bit better for
 micronaut and ktor than for spring reactive and node. Vertx is the clear winner of this test. At 700 req/sec it still
 responds nearly as fast as the mocked service. With higher request counts the response times of Vertx get noticeably
 higher, but it stays responsive up until impressing 1000 req/sec.
 
-### 2. Very slow third party clients
+### 2. Very slow third party systems
 
-Sometimes third party dependencies are quite unreliable. It may occur that they are not available or all, or they get
-very, very slow. Can this be a problem for a framework?
+Sometimes, third party systems are quite unreliable. It may occur that they are not available or all, or they get very,
+very slow. Which framework is best equipped to deal with this sort of problem?
 
 For this test we will adjust our mock services to have a larger delay that in the other tests. Starting at 1 seconds and
-up to 8 seconds. For each duration the Gatling client will call the services for three minutes with 100 req / sec.
+up to 8 seconds. For each duration, the Gatling client will call the services for three minutes with 100 req / sec.
 
 The focus of this test is task handling. Over three minutes more requests are reaching the service than can be
 processed. How good are the frameworks able to handle this piling of tasks?
@@ -242,15 +253,16 @@ frameworks did not show a reaction at all.
 
 ### 3. Resource consumption
 
-Especially when I want to deploy my service at a cloud provider, the resource consumption is a central part of each
-service, because it can be directly be translated in costs that service is causing. It can occur that the resources that
-are available are simply limited. For example when working with on premise infrastructure.
+The resource consumption is a critical part of each service. When deploying to a cloud environment the consumed
+resources can be directly translated into costs. When working with on premise infrastructure it can occur that the
+available resources for the service are limited and I have to make sure that the service is able to work with these
+boundaries.
 
 The Gatling client will call each service one after another with a certain rate of calls per second over three minutes.
-We are using cadvisor which exposes metrics about active containers as prometheus metrics, to compare the resource
-consumption of the different containers. Before each test we will restart all containers, so that the resource metrics
-are not influenced by earlier executions. Please note: For this very test we raised the thread count of the spring
-service to 500. All values are means over multiple test runs.
+We are using [cadvisor](https://github.com/google/cadvisor) which exposes metrics about active containers as prometheus
+metrics, to compare the resource consumption of the different containers. Before each test we will restart all
+containers, so that the resource metrics are not influenced by earlier executions. Please note: For this very test we
+raised the thread count of the spring service to 500. All values are means over multiple test runs.
 
 #### Result
 
@@ -280,25 +292,25 @@ The Vertx services requires the fewest CPU computation time, while all other ser
 computation advantage of Vertx can only be attributed to efficient processing of the requests, since in general all
 services had to process the same logic.
 
-Especially for lower request rates the node service requires muss less memory than all the JVM frameworks. That is not
+Especially for lower request rates, the node service requires less memory than all the JVM frameworks. That is not
 surprising since the Java Runtime Environment is bigger than the Node Runtime. Depending on the scenario, this could be
-a big advantage. For example with the same memory one could host more instances of node containers than of JVM
+a big advantage. For example, with the same memory one could host more instances of node containers than of JVM
 containers.
 
 Note: We have to be careful when comparing memory consumption of JVM services, because the JVM pre-allocates memory it
-does not actually use. Though the result is in the end the effect is the same: The container allocated memory that has
-to be available.
+does not actually use. Therefore, we are not measuring the memory allocated by the JVM, but the memory consumed by the
+whole container, which turned out to be a more meaningful metric.
 
-For each request count spring-reactive and especially spring consume more memory that all other frameworks. At 500 req /
-sec each consumes nearly double the amount of the other frameworks with KTOR-CIO being an exception.
+For each request count, spring-reactive and especially spring consume more memory that all other frameworks. At 500 req
+/ sec each consumes nearly double the amount of the other frameworks with KTOR-CIO being an exception.
 
 ## Resume
 
-After all these numbers let us come back to our initial question. Many question during the development of software can
+After all these numbers let us come back to our initial question. Many questions during the development of software can
 not be answered generally and are very dependent on the use case. Which framework to use and whether to use a
 non-blocking or a blocking one is surely one of them. But no worries, the question we want to answer is a different one:
 Are there differences between the performance of currently commonly used (JVM) frameworks? This question we can answer
-with a clear: Yes!
+with a definitive: Yes!
 
 Especially when you have strict requirements like
 
@@ -311,18 +323,25 @@ these challenges, but surely some of them are easier to overcome when choosing o
 
 ### So which framework to choose?
 
-When you know beforehand that the service will not have to face any of the listed requirements Spring MVC is still a
-pretty solid choice. Spring has a huge community and you will find help for any of you questions very fast.
+Of course, the performance of a framework is not the only criteria when deciding which one fits best your situation or
+use case. For example, the skill set and the experience of the team should affect the decision as much as a technical
+requirement. However, in each scenario you should at least think about the performance requirements before committing to
+a framework.
+
+When you know beforehand that the service will not have to face any of the performance related requirements listed above
+Spring MVC is still a pretty solid choice. Spring has a huge community and you will find help for any of you questions
+very fast.
 
 If you are used to the Spring world and want to stick to it, but also want to use some benefits of asynchronous
-programming Spring Reactive is definitely worth a try. Especially because you can simply reuse certain Spring modules,
+programming, Spring Reactive is definitely worth a try. Especially because you can simply reuse certain Spring modules,
 like SpringSecurity, that you may already have implemented for the blocking Spring stack, an own trial and comparison
-can be quickly achieved.
+can be quickly achieved. How to avoid the complex syntax for asynchronous code that comes with Spring Reactive by using
+Kotlin Coroutines is described in [the next chapter](#one-last-word-about-asynchronous-frameworks-and-programming).
 
-But if you really need a high performant JVM solution, Spring Reactive may not be enough. In that case you should take a
-look at Vertx, which performed excellent in our tests. As said before: Be aware, that Vertx is described as toolkit, not
-as framework. This means you will have to configure certain things on your own, that you are maybe used to get delivered
-in other frameworks.
+In case you really need a high performant JVM solution, Spring Reactive may not be enough. In that case you should take
+a look at Vertx, which performed excellent in our tests. As said before: Be aware, that Vertx is described as a toolkit,
+not as a framework. This means you will have to configure certain things on your own, that you are maybe used to get
+delivered in other frameworks.
 
 Micronaut, Ktor and Node also produced pretty impressing results in our test and can be seen to be on the middle ground
 between the other solutions. They are fully supported frameworks and have also proven that they are capable to result in
