@@ -22,16 +22,17 @@ encountered such a situation before, some of you may have discussed the followin
 
    Sometimes this is possible! Especially applications that are developed for cloud infrastructure can be easily scaled
    up and down so that the sum of deployed services has exactly the desired performance. But multiple instances also
-   require the multiple of resources which can be expensive or sometimes even unavailable. Additionally this
-   approach is not improving the performance of the application itself and thus can only be an intermediate solution.
+   require the multiple of resources which can be expensive or sometimes even unavailable. Additionally this approach is
+   not improving the performance of the application itself and thus can only be an intermediate solution.
 
 2. Are we able to improve the existing processing logic?
 
    For example, is there any potential for parallelization, for caching mechanisms, and so on? The refactoring of
-   existing logic should be a ongoing process during development of any software. This also includes the continuous
-   search for performance issues. Each issue you fix and each improvement you make should be a future-oriented step and one of the
-   best practices when building a long term solution that does not suffer from performance problems. But having to search
-   for possible improvements with limited time in a complex system can be a hard, cumbersome and sometimes even impossible task.
+   existing logic should be an ongoing process during development of any software. This also includes the continuous
+   search for performance issues. Each issue you fix and each improvement you make should be a future-oriented step and
+   one of the best practices when building a long term solution that does not suffer from performance problems. But
+   having to search for possible improvements with limited time in a complex system can be a hard, cumbersome and
+   sometimes even impossible task.
 
 3. Should we have chosen a different framework 2 years ago, when we started implementing this application?
 
@@ -46,10 +47,11 @@ The overall setup of this test can be found [here](https://github.com/fkohl04/fr
 
 Let's think about a possible setup which we can use to compare the performance of different frameworks.
 
-Applications of distributed systems are often part of complex service structures. It is very common that a service uses a
-database, calls other services that are under our control (Internal Dependency), but also uses endpoints from third
-parties which we do not have control over and which can be very slow (External Dependency). We always have to keep in mind that
-when measuring the performance of a deployed application we are also measuring all systems the application relies on.
+Applications of distributed systems are often part of complex service structures. It is very common that a service uses
+a database, calls other services that are under our control (Internal Dependency), but also uses endpoints from third
+parties which we do not have control over and which can be very slow (External Dependency). We always have to keep in
+mind that when measuring the performance of a deployed application we are also measuring all systems the application
+relies on.
 
 ![](./assets/ExampleForComplexSystem.png)
 
@@ -61,9 +63,8 @@ dependency.
 
 ![](./assets/DependenciesForPerformanceTest.png)
 
-The test setup is now simple enough, but we also have to make sure that the test is meaningful by
-assuring that we are really measuring the performance of the service under test. This performance shall not be
-influenced by our test setup:
+The test setup is now simple enough, but we also have to make sure that the test is meaningful by assuring that we are
+really measuring the performance of the service under test. This performance shall not be influenced by our test setup:
 
 - The service shall not be influenced by the system it runs on
 
@@ -77,8 +78,8 @@ influenced by our test setup:
   Overrating the capabilities of mock services is
   a [known pitfall](https://thatdevopsguy.medium.com/high-performance-mocking-for-load-testing-bd6d69610cc9) for
   performance testing. To overcome this we will do a little technical adjustment and raise the count of instances of the
-  mocked service to 3. A load test against the mock service setup assures that it does not influence
-  the performance of the service under test significantly.
+  mocked service to 3. A load test against the mock service setup assures that it does not influence the performance of
+  the service under test significantly.
 
 ![](./assets/DetailedDependenciesForPerformanceTest.png)
 
@@ -103,22 +104,24 @@ used JVM backend services.
 We made our test setup as simple as possible to have fewer parameters and achieve comparability. We are creating our
 services under exactly the same principle and will only implement the most simple application serving our needs without
 any performance relevant adjustments or improvements. In general, I tried to keep the code as similar to the
-'getting started' tutorials of the framework websites as possible to test exactly the impression of the service
-the framework creators are conveying.
+'getting started' tutorials of the framework websites as possible to test exactly the impression of the service the
+framework creators are conveying.
 
 ### Spring
 
-[Spring](https://spring.io/) is one of the most commonly used JVM frameworks, initially released 2002 in an open source license.
-It is available in a blocking servlet stack and a non-blocking reactive stack. We will test both of them separately.
+[Spring](https://spring.io/) is one of the most commonly used JVM frameworks, initially released 2002 in an open source
+license. It is available in a blocking servlet stack and a non-blocking reactive stack. We will test both of them
+separately.
 
 ### KTOR
 
 [KTOR](https://ktor.io/) is a framework for asynchronous client and server applications that promises to be lightweight,
-flexible, simple and fun. The first release was announced in 2018 by Jetbrains. It is written completely in Kotlin and built upon
-its coroutines. Coroutines are [conceptually similar to threads](https://kotlinlang.org/docs/coroutines-basics.html),
-but much more lightweight. Ktor offers the possibility
-to [choose the underlying http engine](https://ktor.io/docs/engines.html). We will test it with a Netty and with the
-coroutine based CIO <mark>!explain "CIO"!</mark> Engine.
+flexible, simple and fun. The first release was announced in 2018 by Jetbrains. It is written completely in Kotlin and
+built upon its coroutines. Coroutines
+are [conceptually similar to threads](https://kotlinlang.org/docs/coroutines-basics.html), but much more lightweight.
+Ktor offers the possibility to [choose the underlying http engine](https://ktor.io/docs/engines.html). We will test it
+with a Netty and with a CIO engine. [CIO](https://ktor.io/docs/faq.html#cio) stands for "coroutine based I/O" and is a
+web engine based on Kotlin and coroutines.
 
 ### Vert.x
 
@@ -129,7 +132,7 @@ call this ["Multi-Reactor"](https://vertx.io/docs/vertx-core/java/#_reactor_and_
 "a toolkit, not a framework", which underlines its flexibility on the one hand, but also indicates it has to be
 configured to a certain degree. Indeed, Vert.x was the only service where I had to do a little performance influencing
 adjustment to make it comparable to the other services: Set the number of verticles and set the max connection count of
-the HttpClient <mark>!do you specifically want to write those names like their class names? Maybe then highlight it somehow (e.g. italics)!</mark>.
+the http client.
 
 ### Micronaut
 
@@ -162,19 +165,20 @@ for more details.
 We will test our candidates in three disciplines
 
 1. How many requests per second can they process without getting unresponsive?
-2. How do they behave <mark>could you be more specific? 'behave' is quite vague as a metric.</mark> if the third party system gets slower and slower?
+2. Given a constant request load, are they able to interact with very slow third party systems?
 3. Given a constant request load, how much of the available resources are the deployed containers consuming?
 
 ### 1. Requests per second
 
 When serving requests that originate from human interactions, there will always be fluctuation in the request rate
 depending on the daytime. For example, if you are processing transaction data, you will probably have a peak in your
-requests rates during lunchtime. <mark>I don't get this, is 'transaction data' referring to debit transactions which
-occur due to people buying food?</mark> How good are our frameworks at withstanding such peaks in the request rate?
+requests rates during lunchtime, because many people are using their credit cards to purchase food during that specific
+timeframe. How good are our frameworks at withstanding such peaks in the request rate?
 
 To test this behavior, the Gatling client calls each service one after another starting with 100 users over three
-minutes. If the rate of successful calls is greater than 90% the test will be repeated with user count raised by 100
-until the service becomes unresponsive. <mark>What does 'unresponsive' mean in numbers?</mark> For further details please
+minutes. If the rate of successful calls is greater than 90% the test will be repeated with user count raised by 100. If
+at least 10% of the calls fail we consider the service as not proper functional and are not starting a further test with
+a higher user count. For details please see
 the [script that executes the load test](https://github.com/fkohl04/framework-performance/blob/main/performancetest/runTillFailure.sh)
 and
 the [gatling test](https://github.com/fkohl04/framework-performance/blob/main/performancetest/src/gatling/scala/scenarios/BasicSimulation.scala)
@@ -201,7 +205,7 @@ many requests can the frameworks accept per second?
 
 When a service is able to handle a certain user count, the response time is near to the configured delay of the
 mockservice (i.e. one second). Before a service becomes unresponsive it can be observed that the response times are
-increasing drastically and the request rate drops. <mark>rate of responses/of successfully handled requests?</mark>
+increasing drastically and the rate of successfully handled requests drops.
 
 **The Spring Service** is the only one working with a blocking threading model. Each incoming call is processed by a
 dedicated JVM thread, which can nicely be observed in the Grafana dashboard.
@@ -210,8 +214,8 @@ dedicated JVM thread, which can nicely be observed in the Grafana dashboard.
 
 The underlying Tomcat http engine works with a fixed count of 200 threads. With this given, it is logical that it can
 serve 200 requests per second. So why not simply raising the count of threads? On the one hand, we want to compare the
-frameworks without any performance relevant adjustments. When working with such a service you have to decide
-what the maximal thread count shall be before deployment. The service is not scaling automatically when the request count gets
+frameworks without any performance relevant adjustments. When working with such a service you have to decide what the
+maximal thread count shall be before deployment. The service is not scaling automatically when the request count gets
 higher than initially expected. On the other hand, raising the thread count is also in general not the perfect solution
 for performance problems, because maintaining threads always costs resources. More details about this will be provided
 in the third test.
@@ -222,15 +226,14 @@ micronaut and ktor than for spring reactive and node. Vertx is the clear winner 
 responds nearly as fast as the mocked service. With higher request counts the response times of Vertx get noticeably
 higher, but it stays responsive up to impressing 1000 req/sec.
 
-<mark>I wonder if a normalized comparison here would have been more useful, i.e. showing req/thread/sec.</mark>
-
 ### 2. Very slow third party systems
 
 Sometimes, third party systems are quite unreliable. It may occur that they are not available at all, or they get very,
 very slow. Which framework is best equipped to deal with this sort of problem?
 
-For this test we will adjust our mock services to have a larger delay than in the other tests. Starting at 1 second and rising increasingly
-up to 8 seconds. For each step, the Gatling client will call the services for three minutes with 100 req / sec.
+For this test we will adjust our mock services to have a larger delay than in the other tests. Starting at 1 second and
+rising increasingly up to 8 seconds. For each step, the Gatling client will call the services for three minutes with 100
+req / sec.
 
 The focus of this test is task handling. Over three minutes more requests are reaching the service than can be
 processed. How good are the frameworks able to handle this piling of tasks?
@@ -251,9 +254,9 @@ processed. How good are the frameworks able to handle this piling of tasks?
 
 Again the result for the Spring service is very logical. With 100 requests per second, each taking 2 seconds to be
 processed all 200 threads will always be blocked. When raising the delay any further, the service will not be able to
-respond to all clients. Interestingly Spring Reactive as an asynchronous framework should be able to handle many
-tasks in parallel, but also got noticeably slower and in the end unresponsive. All other
-frameworks did not exert a noticeable influence at all.
+respond to all clients. Interestingly Spring Reactive as an asynchronous framework should be able to handle many tasks
+in parallel, but also got noticeably slower and in the end unresponsive. All other frameworks did not exert a noticeable
+influence at all.
 
 ### 3. Resource consumption
 
@@ -262,11 +265,11 @@ resources can be directly translated into costs. When working with on premise in
 available resources for the service are limited and you have to make sure that the service is able to work within these
 boundaries.
 
-To test this, the Gatling client will call each service one after another with a certain rate of calls per second over three minutes.
-We are using [cadvisor](https://github.com/google/cadvisor) which exposes metrics about active containers as prometheus
-metrics, to compare the resource consumption of the different containers. Before each test we will restart all
-containers, so that the resource metrics are not influenced by earlier executions. Please note: For this very test we
-raised the thread count of the spring service to 500. All values are means over multiple test runs.
+To test this, the Gatling client will call each service one after another with a certain rate of calls per second over
+three minutes. We are using [cadvisor](https://github.com/google/cadvisor) which exposes metrics about active containers
+as prometheus metrics, to compare the resource consumption of the different containers. Before each test we will restart
+all containers, so that the resource metrics are not influenced by earlier executions. Please note: For this very test
+we raised the thread count of the spring service to 500. All values are means over multiple test runs.
 
 #### Result
 
@@ -303,10 +306,10 @@ containers.
 
 Note: We have to be careful when comparing memory consumption of JVM services, because the JVM pre-allocates memory it
 does not actually use. Therefore, we are not measuring the memory allocated by the JVM, but the memory consumed by the
-whole container, which turned out to be a more meaningful metric. <mark>why is the container memory a better metric?</mark>
+whole container, which turned out to be a more meaningful metric.
 
-For each request rate, spring-reactive and especially spring consume more memory than all other frameworks. At 500 req
-/ sec each consumes nearly double the amount of the other frameworks with KTOR-CIO being an exception.
+For each request rate, spring-reactive and especially spring consume more memory than all other frameworks. At 500 req /
+sec each consumes nearly double the amount of the other frameworks with KTOR-CIO being an exception.
 
 ## Resumé
 
