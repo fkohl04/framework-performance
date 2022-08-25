@@ -380,6 +380,6 @@ All tested services are available as docker containers. To start the test enviro
 and then build the docker images and start the containers by running the [docker-compose file](docker-compose.yml).
 
 The performance test used in this article is the gatling
-simulation [ConstantReqPerSecSimulation](performancetest/src/gatling/scala/scenarios/ConstantReqPerSecSimulation.scala).
+simulation [BasicSimulation](performancetest/src/gatling/scala/scenarios/BasicSimulation.scala).
 To test all applications one after another with different user counts you can use the
 script [runAllTest.sh](performancetest/runAllTest.sh).
