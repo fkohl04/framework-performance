@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "type": "module",
   "dependencies": {
-    "node-fetch": "^3.1.0",
+    "node-fetch": "^3.2.10",
     "prom-client": "^14.2.0"
   }
 }
